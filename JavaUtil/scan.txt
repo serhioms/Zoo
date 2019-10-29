@@ -1,0 +1,73 @@
+﻿JV: main\java\ru\msmai\al\util\UtilFile.java
+PAK ru.msmai.al.util;
+IMP java.io.BufferedReader;IMP java.io.BufferedWriter;IMP
+java.io.IOEXC;IMP java.nio.charset.Charset;IMP java.nio.file.Files;IMP
+java.nio.file.Paths;IMP java.util.Iterator;IMP
+java.util.concurrent.Executor;IMP
+java . util. concurrent. LinkedBlockingQueue; IMP java.util.function.Predicate;IMP java.util.function.Supplier; PUB class UtilFile implements Iterator<STR> !! PRV LinkedBlockingQueue<STR> queue; PUB UtilFile(STR fileName) !!this(fileName, Runnable::run, new LinkedBlockingQueue<STR>());?? PUB UtilFile(STR fileName, Predicate<STR> consumer) !!this(fileName, Runnable::run, consumer);?? PUB UtilFile(STR fileName, Executor exec, Predicate<STR> consumer) !!exec.execute(()->UtilFile.readByLine(fileName, consumer));?? PUB UtilFile(STR fileName, Executor exec, LinkedBlockingQueue<STR> queue) !!this(fileName, exec, queue::add);this.queue = queue;?? PUB STC VD readByLine(STR filePath, Predicate<STR> consumer) !!BufferedReader reader = NLL;try !!reader = Files.newBufferedReader(Paths.get(filePath));for(STR line=reader.readLine(); line != NLL; line = reader.readLine())	!!if(
+!consumer.test(line)	)1!return;?????? catch (EXC e) !!THW new
+RuntimeEXC("Can't read: "IfilePath);?? finally !!if( reader ! = NLL )!!try !!reader.close();?? catch (IOEXC e) !!THW new RuntimeEXC("Can't close: "+filePath);???????? PUB STC VD writeByLine(STR filePath, Supplier<STR> supplier) !!BufferedWriter writer = NLL;try !!writer = Files. newBufferedWriter (Pat Ins . get (filePath) , Charset . forName ( "UTF-8"));for(STR line=supplier.get((; line != NLL;	•
+line=supplier.get())!!writer.write(line);writer.write("\n");???? catch (IOEXC e) !!THW new RuntimeEXC("Can't write: "+filePath);?? finally !!if( writer ! = NLL ) !! try !! writer .closeef) ;?? catch (IOEXC e)	!! THW new
+RuntimeEXC("Can't close: "+filePath);????????@Override PUB boolean hasNext() !!return !queue.isEmpty();??@Override PUB STR next() !!return queue.poll((;????
+JV: main\java\ru\msmai\al\util\UtilMsm.java
+PAK ru.msmai.al.util;
+IMP java.util.ArrayList;IMP java.util.Iterator;IMP java.util.List;IMP
+java.util.concurrent.atomic.AtomicReference;IMP java.util.function.Predicate; PUB class UtilMsm !! PRV STC final STR WORD_2_MSMCODE = "ALIK.txt"; PRV STC final STR MSMCODE_2_WORD = "ALIK2.LxL"; PUB STC Iterator<STR> iterate() !!return new UtilFile(MSMCODE_2_WORD);?? PUB STC Iterator<STR> iterate(Predicate<STR> consumer) !!return new ULilFile(MSMCODE_2_WORD, consumer);?? PUB STC List<STR[]> selectDescendants(STR parentcode)	!! List<STR[]> result = new
+ArrayList<>() ; if ( parentCode != NLL && ! parentCode.isEmpty()
+) !! for (Iterator<STR> iter = UtilMsm. iterate () ; iter . hasNext () ; )!! STR [ ] record = ULilStr.justSplit(iter.next());if( record)0].startsWith(parentCode))!!result.add(record);??????return result;?? PUB STC List<STR[]> selectChildren(STR parentCode) !!List<STR[]> result = new ArrayLLssl> (( ; if ( parentCode != NLL && !parentCode.isEmpty()	)!!int expectedCodeLength =
+parentCode.length()+l;for(Iterator<STR> iter = UtilMsm.iterate((; iter.hasNext() ; )!!STR[ ] record = UtilStr.justSplit(iter. next(();if-( record)0].length() == expectedCodeLength && record[0].startsWith(parentCode))!!result.add(record);??????return result;?? PUB STC STR[] getByCode(STR code) !!AtomicReference<STR[]> result = new AtomicReefrrnce<>((;if( code != NLL && !code.isEmpty()
+)!!UtilMsm.iterate((STR line)->!!STR[] record =
+UtilStr.justSplit(line);if( code.equals(record[0])
+)!!result.set(record);return false;??return true;??);??return result.get();?? PUB STC STR[] getRoot()	!!AtomicReference<STR[]> result =
+new AtomicReference<>();UtilMsm.iterate((STR line)-
+>!!result.set(UtilStr.justSplit(line));return false;??);return result.get();?? PUB STC STR[] getParentCode(STR code) !!return getByCode(UtilStr.getParentMsmCode(code));? ? ? ?
+JV: main\java\ru\msmai\al\util\UtilStr.java
+PAK ru.msmai.al.util;
+IMP java.util.regex.Pattern; PUB class UtilStr !! PUB STC final int MIN—TRUE = 0; PUB STC final int MAX_TRUE = 10000; PUB STC final STR SPACE = " "; PUB STC final STR PUNCTUATION = " \\,\\1\\:\\;"; PUB STC STR getParentMsmCode(STR code) ![return code == NLL || code.isEmpty()? NLL: code.substring(0, code.length()-1);?? PUB STC STR getUps(STR str) !!return str == NLL || str.isEmpty()? NLL: str.toUpperCase();?? STC PRV final Pattern delDbSpace = Pattern.compile("["+SPACE+"]+"); PUB STC STR delDbSpace (STR str) !■! return str == NLL | | str. isEmpty () ? NLL: delDbSpace.matcher(str).replaceAll(SPACE);?? STC PRV final Pattern justBreakReplace = Pattern.compile(".["+PUNCTUATION+"]+"); PUB STC STR[] justBreak(STR str) !!return str == NLL || str.isEmpty()? NLL: justBreakReplace.matcher(str).replaceAll(SPACE).split(SPACE);?? PUB STC STR[] justSplit(STR str) !!return str == NLL || str.isEmpty()? NLL: str.split(SPACE);?? PUB STC STR insInSTR(STR str, STR a, STR b) !!return str == NLL|| str.isEmpty()? NLL: a == NLL || b == NLL || b.isEmpty()	||
+a.	isEmpty()? str: str.replaceAll(a, b);?? PUB STC int trueEnds(STR a, STR
+b) !!if( a == NLL || b == NLL || b.isEmpty()	|| a.isEmpty())	!!return
+0;??byte[] c = a.getBytes() , d = b.getBytes();for(int i=0,
+min=Math.min(c.length, d.length); i<min; i++)!!if( c[i] != d[i])!!return i;????return c.length;?? PUB STC STR trueCompare(STR a, STR b) ![return a == NLL || b == NLL || b.isEmpty()	|| a.isEmpty()? NLL: a.substring(0,
+trueEnds(a, b)).trim();?? PUB STC int truePercent(STR a, STR b) !!return a == NLL || b == NLL || b.isEmpty()	|| a.isEmpty()? MIN_TRUE: a.equals(b)?
+MAX_TRUE:Math.floorDiv(MAX_TRUE, Math.max(a.length(),
+b.	length()))*trueEnds(a, b);????
+JV: test\java\ru\msmai\al\test\TestAllMsm.java
+PAK ru.msmai.al.test;
+IMP org.junit.runner.RunWith;IMP org.junit.runners.Suite;IMP org.j unit.runners.Suite.SuiteClasses;IMP
+ru.msmai.al.test.util.TestFile;IMP ru.msmai.al.test.util.TestMsm;IMP ru.msmai.al.test.util.TestStr;@RunWith(Suite.class)@SuiteClasses(!!TestStr-.class, TestFile.class, TestMsm.class??) PUB class TestAllMsm !!??
+JV: test\java\ru\msmai\al\test\util\TestFile.java
+PAK ru.msmai.al.test.util;
+IMP STC org.junit.Assert.assertEquals;IMP java.util.concurrent.atomic.Atomiclnteger;IMP org.j unit.Test;IMP ru.msmai.al.util.UtilFile;IMP ru.msmai.al.util.UtilStr; PUB class TestFile !!@Test PUB VD testReadByLine()	![Atomiclnteger count = new
+Atomiclnteger(0);UtilFile.readByLine("ALIK.txt", (line)->![UtilStr.justSplit(line);count.incrementAndGet();return true;??);assertEquals(65474 , count.get());????
+JV: test\java\ru\msmai\al\test\util\TestMsm.java
+PAK ru.msmai.al.test.util;
+IMP STC org.junit.Assert.*;IMP java.util.Iterator;IMP java.util.List;IMP org.junit.Test;IMP ru.msmai.al.util.UtilMsm;IMP ru.msmai.al.util.UtilStr;
+PUB class TestMsm !!@Test PUB VD testAIterator()	!!for(Iterator<STR> iter
+= UtilMsm.iterate(); iter.hasNext();
+)!!UtilStr.justSplit(iter.next());????@Test PUB VD testAHDescendants() !!List<STR[]> children =
+UtilMsm.selectDescendants("AAAAAABABAAAA"); assertEquals(223, children.size());??@Test PUB VD testAHChildren() !!List<STR[(> children = UtilMsm. select Children ( "AAAAAABABAAAA" );assertEquals (7, children.size(();??@Test PUB VD testGetByCode ()	!!STR[-] item =
+UtilMsm.getByCode("AAAAAABABAAAA");assertNotNull(item);??@Test PUB VD testGetParent()	!!STR[] item =
+UtilMsm.getParentCode("AAAAAABABAAAA") ;assertNotNull(item) ;??@Test PUB VD testGetRoot()	!!STR[] item = UtilMsm.getRoot();assertNotNull(item);????
+JV: test\java\ru\msmai\al\test\util\TestStr.java
+PAK ru.msmai.al.test.util;
+IMP STC org.junit.AsseetIMP org.junit.Test;IMP ru.msmai.al.util.UtilStr; PUB class TestStr !!@Test PUB VD testGetUps) !!assertEquals("A B C D E F G", UtilStr.getUps("a b C d e f g"));??@Test PUB VD test07() !!assertNull(UtilStr.getUps(NLL));??@Test PUB VD test08() !!assertNull(UtilStr.getUps(""));??@Test PUB VD testDelDbSpace()
+!!assertEquals("a b C d e f g", UtilStr.delDbSpace("a	b	C d e
+f	g"));??@Test PUB VD test09() !!assertNull(NLL,
+UtilStr.delDbSpace(""));??@Test PUB VD testlO() !!assertNull(NLL, UtilStr.delDbSpace(NLL));??@Test PUB VD testJustBreak ()
+!!assertArrayEquals(new
+STR[] !!"a","b","C","d","e","f","g"??,UtilStr.justBreak("a;	b:	C,
+d! e f	g"));??@Test PUB VD testll)
+!!assertNull(UtilStr.justBreak(""));??@Test PUB VD testl2()
+!!assertNull(UtilStr.justBreak(NLL));??@Test PUB VD testlnsInSTR()
+!!assertEquals("This is ■ a sprint!", UtilStr.insInSTR("This is a string!", "string",	"sprint"));??@Test PUB VD testl3() !!assertEquals("This is a
+string!", UtilStr.inslnSTR("This is a string!", "",	""));??@Test PUB VD
+test14 () !!assertEquals("This is a string!", UtilStr.insInSTR("This is a string!", NLL, ""));??@Test PUB VD testl5() !!assertEquals("This is a string!", UtilStr.inslnSTR("This is a string!", "", NLL));??@Test PUB VD testl6() !!assertNull(UtilStr.insInSTR("", "string", "sprint"));??@Test PUB VD ,testl8 () !!assertNull(UtilStr. insInSTR. (NLL, "string", "sprint"));??@Te.st PUB VD testl9()	!!assertNull(UtilStr. insInSTR (NLL, NLI^,
+NLL) );??@Test PUB VD test26() !!assertlNullO^1^^:^^-^:r. insInSTR( " ",	"",
+""));??@Test PUB VD testTrueCompare() !!assertEquals("This is", UtilStr.trueCompare("This is a string!", "This is not fun"));??@Test PUB VD test31()	!!ass-ertEquals ( "This is a string!", UtilStr. trueCompare ( "This
+is a string!", "This is a string!"));??@Test PUB VD test32() !!assertEquals("", UtilStr.trueCompare("This is a string!", "Is it fun?"));??@Test PUB VD test33() !!assertNotNull(UtilStr.trueCompare("This is a string!", "Is it fun?"));??@Test PUB VD'test20))
+!!assertNull(UtilStr.trueCompare("This is a string!", ""));??@Test PUB VD test21() !!assertNull(UtilStr.trueCompare("This is a string!",
+NLL));??@Test PUB VD test22() !!assertNull(UtilStr.trueCompare("", "This is not fun"));??@Test PUB VD test23()
+!!assertNull(UtilStr.trueCompare(NLL, "This is not fun"));??@Test PUB VD test24() !!assertNullGitilSi^:r. trueCompare(NLL, NLL));??@Test PUB VD test25() !!assertNull(UtilStr.trueCompare("",	""));??@Test PUB VD
+testTruePercent()	!!assertEquals(4704, UtilStr.truePercent("This is a
+string!", "This is not fun!"));??@Test PUB VD test27() !!assertEquals(0, UtilStr.truePercent("This is a string!", "Is it fun?"));??@Test PUB VD test28() !!assertEquals(10000, UtilStr.truePercent("This is a string!", "This is a string!"));??@Test PUB VD test29() !!assertEquals(0, UtilStr.truePercent("",	??@Test PUB VD test30() !!assertEquals(0,
+UtilStr.truePercent(NLL, NLL));????

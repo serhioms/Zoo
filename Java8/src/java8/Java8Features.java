@@ -25,6 +25,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -60,13 +61,17 @@ public class Java8Features {
 	 * Default and static methods in interfaces - become similar to abstract classes!
 	 * 
 	 */
-	// @FunctionalInterface  - Java8Features.DefaultAndStatic is not a functional interface !!!
-	public interface JavaDefaultAndStatic {
+	// @FunctionalInterface  // Default is not a functional interface !!!
+	public interface JavaDefault {
 		
 		default int defaultMirror(int v) { 
 			return v;
 		}
-		
+	 }
+	
+	// @FunctionalInterface  // Static is not a functional interface !!!
+	public interface JavaStatic {
+	 
 		static int staticMirror(int v) { 
 			return v;
 		}
@@ -133,7 +138,7 @@ public class Java8Features {
 			assertEquals(57, sum.get());
 
 			// stream aggregates
-			assertEquals(7, Arrays.stream(new int[] {1,2,3,4,5,6,7}).count());
+			assertEquals(7, Arrays.stream(new int[] {1,2,3,4,5,6,7}).sorted().count());
 			assertEquals(28, Arrays.stream(new int[] {1,2,3,4,5,6,7}).sum());
 			assertEquals(4.0, Arrays.stream(new int[] {1,2,3,4,5,6,7}).average().getAsDouble(), 0.00000000001);
 			assertEquals(1, Arrays.stream(new int[] {1,1,1,1,1,1,1}).distinct().sum());
@@ -337,7 +342,7 @@ public class Java8Features {
 			//default format
 			System.out.println("Default format of LocalDate="+date);
 			//specific format
-			System.out.println(date.format(DateTimeFormatter.ofPattern("d::MMM::uuuu")));
+			System.out.println(date.format(DateTimeFormatter.ofPattern("d::MMM::uuuu", Locale.CANADA)));
 			System.out.println(date.format(DateTimeFormatter.BASIC_ISO_DATE));
 			
 			

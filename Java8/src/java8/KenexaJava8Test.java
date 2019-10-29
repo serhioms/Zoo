@@ -129,6 +129,7 @@ public class KenexaJava8Test {
 		try {
 
 			assertEquals("java.util.Base64$Decoder", java.util.Base64.getDecoder().getClass().getName());
+			assertEquals("java.util.Base64$Encoder", java.util.Base64.getEncoder().getClass().getName());
 			assertEquals("java.util.Base64$Decoder", java.util.Base64.getMimeDecoder().getClass().getName());
 			assertEquals("java.util.Base64$Encoder", java.util.Base64.getMimeEncoder().getClass().getName());
 			assertEquals("java.util.Base64$Decoder", java.util.Base64.getUrlDecoder().getClass().getName());
@@ -142,7 +143,7 @@ public class KenexaJava8Test {
 	@Test
 	public void IntSummaryStatistics() {
 		IntSummaryStatistics stats = Arrays.asList("a","abc","abcdw").stream().filter(name -> !name.isEmpty())
-				.collect(Collectors.summarizingInt(name -> name.length()));
+				.collect(Collectors.summarizingInt(name -> name.length())); // summarizingDouble, summarizingLong
 		
 		assertEquals(9, stats.getSum());
 		assertEquals(1, stats.getMin());
@@ -166,6 +167,7 @@ public class KenexaJava8Test {
 			int a = Integer.MAX_VALUE;
 			int b = Integer.MAX_VALUE;
 			
+			// No ArithmeticException!
 			try {
 				int c = a + b;
 				assertEquals(-2, c);
@@ -174,6 +176,7 @@ public class KenexaJava8Test {
 				assertEquals(null, e.getMessage());
 			}
 		
+			// throw ArithmeticException
 			try {
 				assertEquals(-2, Math.addExact(a,b));
 			} catch(ArithmeticException e) {
@@ -207,6 +210,9 @@ public class KenexaJava8Test {
 			assertEquals(3, newPartition.estimateSize()); 
 			assertEquals(4, peopleSpliterator.estimateSize());
 			
+			newPartition.forEachRemaining(System.out::println); // A, B, C
+			newPartition.forEachRemaining(System.out::println); // Nothing
+			
 		} catch(Exception e) {
 			fail(e.getMessage());
 		}
@@ -219,7 +225,7 @@ public class KenexaJava8Test {
 
 			AtomicInteger sum = new AtomicInteger(0); 
 			
-			Runnable r2 = () -> sum.addAndGet(1); 			// Functional interface implementation vie lambda operator ::
+			Runnable r2 = () -> sum.addAndGet(1); 			// Functional interface implementation vie lambda definition
 
 			IntStream.range(0,7).forEach(n->r2.run());
 			assertEquals(7, sum.get());
@@ -353,7 +359,7 @@ public class KenexaJava8Test {
 	@Test
 	public void Predicate() {
 		/*
-		 * Predicate must implement boolean test method
+		 * Predicate must implement boolean test<T>
 		 */
 		Predicate<Integer> checkEvent1 = x->x > 0;
 		Predicate<Integer> checkEvent2 = new Predicate<Integer>() {
@@ -375,7 +381,7 @@ public class KenexaJava8Test {
 	@Test
 	public void Consumer() {
 		/*
-		 * Simple Consumer accept
+		 * Consumer must implement void accept<T>
 		 */
 		Consumer<String> consumer1 = System.out::println;
 		Consumer<String> consumer2 = x->System.out.println(x);
@@ -392,7 +398,7 @@ public class KenexaJava8Test {
 	@Test
 	public void Supplier() {
 		/*
-		 * Simple Supplier get
+		 * Supplier must implement <T> get method
 		 */
 		Supplier<String> supplier1 = String::new;
 		Supplier<String> supplier2 = ()->new String("Hello");
@@ -407,9 +413,15 @@ public class KenexaJava8Test {
 	}
 	
 	@Test
-	public void JavaUtilFunctionFunction() {
+	public void JavaUtilFunctionalInterface() {
 		/*
-		 *  functional interface Function<T, R> apply(), andThen(), compose() & identity()
+		 *  Function  must implement <R>apply<T> method
+		 *  
+		 *  Defaults:
+		 *  
+		 *  <T,V>andThen<R,V> 	- implements after apply
+		 *  <V,R>compose<V,T> 	- implements before apply 
+		 *  <T>identity<T>		- return arg
 		 *  converted i.e. mapped 
 		 */
 		Function<String,Integer> f;

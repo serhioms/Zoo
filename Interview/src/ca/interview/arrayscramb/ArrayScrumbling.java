@@ -1,6 +1,5 @@
 package ca.interview.arrayscramb;
 
-import java.util.Arrays;
 import java.util.Random;
 
 public class ArrayScrumbling {

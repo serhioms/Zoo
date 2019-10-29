@@ -12,16 +12,20 @@ public class SquareInt {
 		
 		System.out.println("In range ("+A+","+B+")");
 		
-        int n =  new Long(IntStream.range(A, B+1).filter(p-> {
-			int q = new Double(Math.sqrt(p)).intValue();
-			boolean ifSquareInt = q*q == p;
-			
-			if( ifSquareInt ){
-				System.out.println(p);
-			}
-			return ifSquareInt;
-		}).count()).intValue();
+   		Long count = IntStream.range(A, B+1)
+			.filter(n->pow2(new Double(Math.sqrt(n)).intValue()) == n)
+			.filter(n->trueprint(n))
+			.count();
+   		
+		System.out.println("N="+count.intValue());
+	}
 
-		System.out.println("N="+n);
+	private boolean trueprint(int p) {
+		System.out.println(p);
+		return true;
+	}
+
+	private int pow2(int i) {
+		return i*i;
 	}
 }
