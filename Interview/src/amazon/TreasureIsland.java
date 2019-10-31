@@ -3,12 +3,11 @@ package amazon;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Queue;
 
 import org.junit.Test;
+
+import java8.lambdas.Arrays2List;
 /*
  * Amazon | OA 2019 | Treasure Island
  * https://leetcode.com/discuss/interview-question/347457
@@ -101,15 +100,7 @@ public class TreasureIsland {
 		
 		assertEquals(5, minSteps(grid));
 		assertEquals(10, sol2Count);
-		assertEquals("[[D, D, D, D], [D, D, D, D], [D, D, D, D], [X, D, D, O]]", toListOfString(grid));
-	}
-
-	private List<String> toListOfString(char[][] arr) {
-		 ArrayList<String> arrayList = new ArrayList<String>();
-		 Arrays.stream(arr).forEach(a->{
-			 System.out.println(a); 
-		 });
-		 return arrayList;
+		assertEquals("[DDDD, DDDD, DDDD, XDDO]", Arrays2List.toListOfString(grid));
 	}
 
 /*

@@ -6,9 +6,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.stream.Collectors;
 
 import org.junit.Test;
+
+import java8.lambdas.Arrays2List;
 
 /*
  * Amazon | OA 2019 | Min Cost to Connect Ropes
@@ -32,27 +33,27 @@ Total cost to connect the ropes is 10 + 18 + 30 = 58
 public class MinCostToConnectRopes {
 
 	private int solution1(int[] A) {
-		int min=0;
+		int totalCost=0;
 		while(true) {
 			Arrays.sort(A);
 			if( A[1] == Integer.MAX_VALUE ) {
 				break;
 			}
 			int sum = A[0]+A[1];
-			min += sum;
+			totalCost += sum;
 			A[0] = sum;
 			A[1] = Integer.MAX_VALUE;
 		}
-		return min;
+		return totalCost;
 	}
 
 	private int solution2(int[] A) {
-		int min = 0;
+		int totalCost = 0;
 		Arrays.sort(A);
 		for(int i=1,max=A.length; i<max; i++) {
 			int sum = A[i-1]+A[i];
-			min += sum;
-			// move sum to right place vie swaaap
+			totalCost += sum;
+			// move sum to right place vie swa-ap
 			for(int k=i+1; k<max; k++) {
 				if( A[k]<sum ) {
 					A[k-1] = A[k];
@@ -63,11 +64,11 @@ public class MinCostToConnectRopes {
 				}
 			}
 		}
-		return min;
+		return totalCost;
 	}
 
-	public static int solutionAmazonMinCost(int[] ropes) {
-	    Queue<Integer> pq = new PriorityQueue<>(toListOfInteger(ropes));
+	public static int solutionAmazonMinCost(List<Integer> ropes) {
+	    Queue<Integer> pq = new PriorityQueue<>(ropes);
 	    int totalCost = 0;
 	    while (pq.size() > 1) {
 	        int cost = pq.poll() + pq.poll();
@@ -77,35 +78,31 @@ public class MinCostToConnectRopes {
 	    return totalCost;
 	}
 	
-	private static List<Integer> toListOfInteger(int[] arr) {
-		return Arrays.stream(arr).boxed().collect(Collectors.toList());
-	}
-
 	@Test
 	public void test1() {
 		assertEquals(58, solution1(new int[]{8,4,6,12}));
 		assertEquals(58, solution2(new int[]{8,4,6,12}));
-		assertEquals(58, solutionAmazonMinCost(new int[]{8,4,6,12}));
+		assertEquals(58, solutionAmazonMinCost(Arrays2List.toListOfInteger(new int[]{8,4,6,12})));
 	}
 
 	@Test
 	public void test2() {
 		assertEquals(54, solution1(new int[]{20, 4, 8, 2}));
 		assertEquals(54, solution2(new int[]{20, 4, 8, 2}));
-		assertEquals(54, solutionAmazonMinCost(new int[]{20, 4, 8, 2}));
+		assertEquals(54, solutionAmazonMinCost(Arrays2List.toListOfInteger(new int[]{20, 4, 8, 2})));
 	}
 
 	@Test
 	public void test3() {
 		assertEquals(224, solution1(new int[]{1, 2, 5, 10, 35, 89}));
 		assertEquals(224, solution2(new int[]{1, 2, 5, 10, 35, 89}));
-		assertEquals(224, solutionAmazonMinCost(new int[]{1, 2, 5, 10, 35, 89}));
+		assertEquals(224, solutionAmazonMinCost(Arrays2List.toListOfInteger(new int[]{1, 2, 5, 10, 35, 89})));
 	}
 
 	@Test
 	public void test4() {
 		assertEquals(20, solution1(new int[]{2, 2, 3, 3}));
 		assertEquals(20, solution2(new int[]{2, 2, 3, 3}));
-		assertEquals(20, solutionAmazonMinCost(new int[]{2, 2, 3, 3}));
+		assertEquals(20, solutionAmazonMinCost(Arrays2List.toListOfInteger(new int[]{2, 2, 3, 3})));
 	}
 }
