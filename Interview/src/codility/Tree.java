@@ -1,17 +1,16 @@
 package codility;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.IntStream;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-
-public class Tree implements Runnable {
+public class Tree {
 	
+	/*
+	 * Tree model 
+	 */
 	public int i;
 	public Tree l;
 	public Tree r;
@@ -22,23 +21,11 @@ public class Tree implements Runnable {
 		this.r = r;
 	}
 	
-	
-
 	@Override
 	public String toString() {
 		return Integer.toString(i);
 	}
 
-
-
-	/*
-	 * High Order implementation
-	 */
-	@Override
-	public void run() {
-		System.out.println(i);
-	}
-	
 	/*
 	 * Implement tree builder
 	 */
@@ -63,7 +50,7 @@ public class Tree implements Runnable {
 	}
 	
 	/*
-	 * 
+	 * Implement tree traversal/visitor 
 	 */
     public static interface Visitor {
     	public void visit(Tree t, int d);
@@ -77,7 +64,15 @@ public class Tree implements Runnable {
     	}
 	}
     
-    public static void show(Tree root, int mid) {
+    public static void travers(Tree t, Visitor v) {
+    	if( t != null ){
+    		v.visit(t, 0);
+	    	travers(t.l, v, -1);
+	    	travers(t.r, v, +1);
+    	}
+	}
+    
+    public static void showTree(Tree root, int mid) {
 		IntStream.range(0, mid).forEach(i->System.out.print("\t"));
 		System.out.println(root);
 		Tree.travers(root, (t, d)->{
@@ -86,71 +81,59 @@ public class Tree implements Runnable {
 			IntStream.range(0, 2).forEach(i->System.out.print("\t"));
 			System.out.println(t.r==null?".":t.r);
 		}, mid);
+		System.out.println("\n=============================================================================\n");
 	}
     
     /*
-     * 
+     * Implement perfect tree finder: double traversal/double recursive
      */
-	public static Set<Integer> findMaxPerfect(Tree root) {
-		
-		Map<Integer, Pair<Integer,Integer>> perf = new HashMap<>();
-		
-		Tree.travers(root, (t, d)->{
-			if( t.l != null && t.r != null ) {
-				perf.put(t.i, new ImmutablePair<>(t.l.i, t.r.i));
-			} else {
-				perf.put(t.i, null);
+	private static int findMaxDeepnessRecursivelly(Tree node, int deep) {
+		if( node != null ) {
+			if( node.l != null || node.r != null ) {
+				return Integer.min(
+						findMaxDeepnessRecursivelly(node.l, deep+1), 
+						findMaxDeepnessRecursivelly(node.r, deep+1));
+			} else if( node.l == null || node.r == null ) {
+				return deep+1;
 			}
-		}, 0);
+		}
+		return deep;
+	}
+	
+	private static void selectPerfectNodesRecursivelly(Tree node, int deep, Set<Integer> perfect) {
+		if( node != null && deep > 0 ) {
+			if( node.l != null && node.r != null ) {
+				perfect.add(node.i);
+				selectPerfectNodesRecursivelly(node.l, deep-1, perfect);
+				selectPerfectNodesRecursivelly(node.r, deep-1, perfect);
+			} else {
+				perfect.add(node.i);
+			}
+		}
+	}
+	
+	public static Set<Integer> findMaxPerfect(Tree root) {
 
-		System.out.println("Perfect: "+perf.toString());
+		AtomicInteger maxd = new AtomicInteger(0);
+		AtomicReference<Tree> maxr = new AtomicReference<Tree>(null);
 		
-		AtomicInteger maxl = new AtomicInteger(0);
-		AtomicInteger maxr = new AtomicInteger(0);
-		
-		perf.keySet()
-			.stream()
-			.forEach(r->{
-				int nmaxl = findMaxLength(0, perf, r);
-				System.out.println(r+" max = "+nmaxl);
-				if( nmaxl > maxl.get() ) {
-					maxl.set(nmaxl);
+		Tree.travers(root, (r, x)->{
+			if( r != null && r.l != null && r.r != null ) {
+				int deep = findMaxDeepnessRecursivelly(r, 0);
+				System.out.println("[root="+r+"][deep="+deep+"]");
+				if( deep > maxd.get() ) {
+					maxd.set(deep);
 					maxr.set(r);
 				}
-			});
-		
-		System.out.println("==========");
-		System.out.println(maxr.get()+" MAX = "+maxl.get());
-		
-		
-		return selectMaxNodes(perf, maxr.get(), new HashSet<Integer>(), maxl.get());
-	}
-
-	public static int findMaxLength(int l, Map<Integer, Pair<Integer,Integer>> perf, int r) {
-		Pair<Integer, Integer> pair = perf.get(r);
-		if( pair == null ) {
-			return l;
-		} else if( pair.getLeft() == null || pair.getRight() == null ) {
-			return l+1;
-		} else {
-			return Integer.min(findMaxLength(l+1, perf, pair.getLeft()), findMaxLength(l+1, perf, pair.getRight()));
-		}
-	}
-
-	public static Set<Integer> selectMaxNodes(Map<Integer, Pair<Integer, Integer>> perf, int r, HashSet<Integer> fin, int l) {
-		if( l >= 0 ) {
-			Pair<Integer, Integer> pair = perf.get(r);
-			if( pair == null ) {
-				fin.add(r);
-			} else if( pair.getLeft() == null && pair.getRight() == null ) {
-				fin.add(r);
-			} else if( pair.getLeft() != null && pair.getRight() != null ) {
-				fin.add(r);
-				selectMaxNodes(perf, pair.getLeft(), fin, l-1);
-				selectMaxNodes(perf, pair.getRight(), fin, l-1);
 			}
-		}
-		return fin;
+		});
+		
+		System.out.println("====================\nMAX[root="+maxr.get()+"][deep="+maxd.get()+"]");
+		
+		TreeSet<Integer> treeSet = new TreeSet<Integer>();
+		selectPerfectNodesRecursivelly(maxr.get(), maxd.get(), treeSet);
+		
+		return treeSet;
 	}
-
+	
 }

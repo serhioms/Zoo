@@ -101,9 +101,9 @@ public class PerfectBinaryTree2 {
 						)
 			;
 		
-		Tree.show(root, 7);
+		Tree.showTree(root, 7);
 		
-        assertEquals("[3, 5, 6, 7, 8, 9, 10]", Tree.findMaxPerfect(root).toString());
+        assertEquals("[4, 44, 45, 441, 442, 451, 452]", Tree.findMaxPerfect(root).toString());
 	}
 	
 	@Test
@@ -148,9 +148,9 @@ public class PerfectBinaryTree2 {
 						)
 			;
 		
-		Tree.show(root, 7);
+		Tree.showTree(root, 7);
 		
-        assertEquals("[4512, 451, 4, 452, 4421, 4422, 4521, 4522, 44, 45, 441, 442, 4411, 4412, 4511]", Tree.findMaxPerfect(root).toString());
+        assertEquals("[4, 44, 45, 441, 442, 451, 452, 4411, 4412, 4421, 4422, 4511, 4512, 4521, 4522]", Tree.findMaxPerfect(root).toString());
 	}
 	
 	@Test
@@ -210,9 +210,9 @@ public class PerfectBinaryTree2 {
 						)
 			;
 
-		Tree.show(root, 10);
+		Tree.showTree(root, 10);
 
-        assertEquals("[4512, 451, 4, 452, 4421, 4422, 4521, 4522, 44, 45, 441, 442, 4411, 4412, 4511]", Tree.findMaxPerfect(root).toString());
+        assertEquals("[4, 44, 45, 441, 442, 451, 452, 4411, 4412, 4421, 4422, 4511, 4512, 4521, 4522]", Tree.findMaxPerfect(root).toString());
 	}
 	
 	@Test
@@ -287,7 +287,7 @@ public class PerfectBinaryTree2 {
 						)
 			;
 		
-        assertEquals("[64, 6451, 644, 6452, 645, 6441, 6442]", Tree.findMaxPerfect(root).toString());
+        assertEquals("[64, 644, 645, 6441, 6442, 6451, 6452]", Tree.findMaxPerfect(root).toString());
 	}
 	@Test
 	public void test51(){
@@ -363,7 +363,7 @@ public class PerfectBinaryTree2 {
 						)
 			;
 		
-        assertEquals("[84512, 8451, 84421, 8452, 84422, 84521, 84522, 844, 845, 84, 8441, 84411, 8442, 84412, 84511]", Tree.findMaxPerfect(root).toString());
+        assertEquals("[84, 844, 845, 8441, 8442, 8451, 8452, 84411, 84412, 84421, 84422, 84511, 84512, 84521, 84522]", Tree.findMaxPerfect(root).toString());
 	}
 	
 }

@@ -28,21 +28,18 @@ public class CodilityTest10_28_2019 {
 
 	public static int solution1(int[] A) {
 		// write your code in Java SE 8
-		MyInteger myint = new MyInteger();
-		java.util.Arrays.stream(A).forEach(e -> myint.mul(e));
-		return myint.signum();
-	}
-
-	static public class MyInteger {
-		int mul = 1;
-
-		public void mul(int e) {
-			mul *= Integer.signum(e);
+		if( A == null || A.length == 0 ) {
+			throw new RuntimeException("Input array must not be empty.");
 		}
-
-		public int signum() {
-			return mul;
+		int minuses=0;
+		for(int n: A){
+			if( n == 0 ) {
+				return 0;
+			} else if( n < 0 ) {
+				minuses++;
+			}
 		}
+		return minuses%2==1? -1: 1;
 	}
 
 	public static String solution2(String S) {
@@ -68,7 +65,6 @@ public class CodilityTest10_28_2019 {
 		// write your code in Java SE 8
 		Sms sms = new Sms();
 		Long k = java.util.Arrays.stream(S.split(" ")).filter(s -> sms.addAndCompare(s, K)).count();
-
 		return sms.getResult(S, K, k);
 	}
 

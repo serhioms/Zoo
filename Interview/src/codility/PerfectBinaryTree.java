@@ -31,7 +31,7 @@ public class PerfectBinaryTree {
 
 	@Test
     public void testShowTree() {
-		Tree.show(root, 5);
+		Tree.showTree(root, 5);
 	}
 
 	@Test
