@@ -1,48 +1,42 @@
 package codility;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import org.junit.Test;
+
 public class CodilityTest10_28_2019 {
 
-	public static void main(String[] args) {
-		System.out.println("solution1: " + (1 == solution1(new int[] { 1, 2, 3 })));
-		System.out.println("solution1: " + (-1 == solution1(new int[] { -1, 2, 3 })));
-		System.out.println("solution1: " + (1 == solution1(new int[] { -1, -2, 3 })));
-		System.out.println("solution1: " + (0 == solution1(new int[] { -1, 0, 3 })));
-		System.out.println("solution1: " + (-1 == solution1(new int[] { -100, Integer.MAX_VALUE })));
-		System.out.println("solution1: " + (1 == solution1(new int[] { 100, Integer.MAX_VALUE })));
-		System.out.println("");
-		System.out.println("solution2: " + (equals("D",solution2("aaBabcDad"))));
-		System.out.println("solution2: " + (equals("B",solution2("aaBabcDaA"))));
-		System.out.println("solution2: " + (equals("NO",solution2(""))));
-		System.out.println("solution2: " + (equals("NO",solution2("Codility"))));
-		System.out.println("solution2: " + (equals("T",solution2("WeTestCodErs"))));
-		System.out.println("solution2: " + (equals("Z",solution2("WeTestCodErszZ"))));
-	}
-
-	private static String equals(String exp, String sol) {
-		return exp.equals(sol)+": expected "+exp+" but got "+sol;
-	}
-
-	public static int solution1(int[] A) {
+	public int solution1(int[] A) {
 		// write your code in Java SE 8
 		if( A == null || A.length == 0 ) {
 			throw new RuntimeException("Input array must not be empty.");
 		}
-		int minuses=0;
+		boolean minus=false;
 		for(int n: A){
-			if( n == 0 ) {
+			if( n < 0 ) {
+				minus = !minus;
+			} else if( n == 0 ) {
 				return 0;
-			} else if( n < 0 ) {
-				minuses++;
 			}
 		}
-		return minuses%2==1? -1: 1;
+		return minus? -1: 1;
 	}
 
-	public static String solution2(String S) {
+	@Test
+	public void testSolution1() {
+		assertEquals(1, solution1(new int[] { 1, 2, 3 }));
+		assertEquals(-1, solution1(new int[] { -1, 2, 3 }));
+		assertEquals(1, solution1(new int[] { -1, -2, 3 }));
+		assertEquals(0, solution1(new int[] { -1, 0, 3 }));
+		assertEquals(-1, solution1(new int[] { -100, Integer.MAX_VALUE }));
+		assertEquals(1, solution1(new int[] { 100, Integer.MAX_VALUE }));
+	}
+
+	public String solution2(String S) {
 		// write your code in Java SE 8
 		Set<Character> set = new HashSet<>();
 
@@ -59,6 +53,16 @@ public class CodilityTest10_28_2019 {
 
 		System.out.println(set);
 		return max.isPresent()?max.get().toString().toUpperCase(): "NO";
+	}
+
+	@Test
+	public void testSolution2() {
+		assertEquals("D",solution2("aaBabcDad"));
+		assertEquals("B",solution2("aaBabcDaA"));
+		assertEquals("NO",solution2(""));
+		assertEquals("NO",solution2("Codility"));
+		assertEquals("T",solution2("WeTestCodErs"));
+		assertEquals("Z",solution2("WeTestCodErszZ"));
 	}
 
 	public int solution3(String S, int K) {
@@ -100,4 +104,21 @@ public class CodilityTest10_28_2019 {
 		}
 
 	}
+
+	@Test
+	public void testSolution3() {
+		assertEquals(-1, solution3("", 3));
+		assertEquals(1, solution3("1", 3));
+		assertEquals(1, solution3("123", 3));
+		assertEquals(-1, solution3("1234", 3));
+		assertEquals(2, solution3("12 12", 3));
+		assertEquals(1, solution3("12 12", 5));
+		assertEquals(2, solution3("12 12 123", 5));
+		assertEquals(2, solution3("12 12 12345", 5));
+		assertEquals(-1, solution3("12 12 123456", 5));
+		assertEquals(3, solution3("12 12 12345 6", 5));
+		assertEquals(-1, solution3("12 12 12345 6", 2));
+		assertEquals(3, solution3("12 12 1 23 45 6", 5));
+	}
+
 }
