@@ -1,4 +1,4 @@
-package java8.lambda.collection;
+package java8.lambdas;
 
 import static org.junit.Assert.assertEquals;
 

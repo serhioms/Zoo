@@ -1,4 +1,4 @@
-package java7.timestamp;
+package java7;
 
 import static org.junit.Assert.*;
 import org.junit.Test;

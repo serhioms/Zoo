@@ -1,4 +1,4 @@
-package org.ph.training.java8.jvm;
+package java8.memleak;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

@@ -1,4 +1,4 @@
-package org.ph.training.java8.jvm;
+package java8.memleak;
 
 import java.util.Map;
 import java.util.HashMap;

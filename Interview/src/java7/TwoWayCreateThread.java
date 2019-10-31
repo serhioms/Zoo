@@ -1,4 +1,4 @@
-package java7.threads;
+package java7;
 
 import org.junit.Test;
 

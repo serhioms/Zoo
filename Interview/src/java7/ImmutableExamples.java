@@ -1,4 +1,4 @@
-package java7.immutable;
+package java7;
 
 import static org.junit.Assert.fail;
 

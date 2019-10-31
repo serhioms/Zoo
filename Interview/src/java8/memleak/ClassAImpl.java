@@ -1,4 +1,4 @@
-package org.ph.training.java8.jvm;
+package java8.memleak;
 
 /**
  * ClassAImpl

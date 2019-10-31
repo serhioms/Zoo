@@ -1,4 +1,4 @@
-package java8;
+package kenexa;
 
 public class MyProducer {
 

@@ -1,4 +1,4 @@
-package interview.task;
+package ca.interview.primenumber;
 
 import static org.junit.Assert.*;
 
@@ -23,7 +23,7 @@ public class PrimeNumberGen {
 		if( n<2 ) return false;
 		
 		int q = (int )Math.floor(Math.sqrt((double )n));
-		for(int i=2; i<= q; i++) {
+		for(int i=2; i<=q; i++) {
 			if( n % i == 0 ) {
 				return false;
 			}
