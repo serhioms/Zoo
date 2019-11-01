@@ -1,4 +1,4 @@
-package amazon;
+package tamazon;
 
 import static org.junit.Assert.assertEquals;
 
@@ -82,27 +82,27 @@ public class MinCostToConnectRopes {
 	public void test1() {
 		assertEquals(58, solution1(new int[]{8,4,6,12}));
 		assertEquals(58, solution2(new int[]{8,4,6,12}));
-		assertEquals(58, solutionAmazonMinCost(Arrays2List.toListOfInteger(new int[]{8,4,6,12})));
+		assertEquals(58, solutionAmazonMinCost(Arrays2List.toListOf(new int[]{8,4,6,12})));
 	}
 
 	@Test
 	public void test2() {
 		assertEquals(54, solution1(new int[]{20, 4, 8, 2}));
 		assertEquals(54, solution2(new int[]{20, 4, 8, 2}));
-		assertEquals(54, solutionAmazonMinCost(Arrays2List.toListOfInteger(new int[]{20, 4, 8, 2})));
+		assertEquals(54, solutionAmazonMinCost(Arrays2List.toListOf(new int[]{20, 4, 8, 2})));
 	}
 
 	@Test
 	public void test3() {
 		assertEquals(224, solution1(new int[]{1, 2, 5, 10, 35, 89}));
 		assertEquals(224, solution2(new int[]{1, 2, 5, 10, 35, 89}));
-		assertEquals(224, solutionAmazonMinCost(Arrays2List.toListOfInteger(new int[]{1, 2, 5, 10, 35, 89})));
+		assertEquals(224, solutionAmazonMinCost(Arrays2List.toListOf(new int[]{1, 2, 5, 10, 35, 89})));
 	}
 
 	@Test
 	public void test4() {
 		assertEquals(20, solution1(new int[]{2, 2, 3, 3}));
 		assertEquals(20, solution2(new int[]{2, 2, 3, 3}));
-		assertEquals(20, solutionAmazonMinCost(Arrays2List.toListOfInteger(new int[]{2, 2, 3, 3})));
+		assertEquals(20, solutionAmazonMinCost(Arrays2List.toListOf(new int[]{2, 2, 3, 3})));
 	}
 }
