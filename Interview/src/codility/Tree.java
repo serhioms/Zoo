@@ -1,5 +1,6 @@
 package codility;
 
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -112,7 +113,7 @@ public class Tree {
 		}
 	}
 	
-	public static Set<Integer> findMaxPerfect(Tree root) {
+	public static Set<Integer> findMaxPerfectT(Tree root) {
 
 		AtomicInteger maxd = new AtomicInteger(0);
 		AtomicReference<Tree> maxr = new AtomicReference<Tree>(null);
@@ -136,4 +137,36 @@ public class Tree {
 		return treeSet;
 	}
 	
+	public static Set<Integer> findMaxPerfectQ(Tree root) {
+
+		LinkedList<Tree> queue = new LinkedList<Tree>();
+		queue.add(root);
+		
+		AtomicInteger maxd = new AtomicInteger(0);
+		AtomicReference<Tree> maxr = new AtomicReference<Tree>(null);
+		
+		for(Tree node=queue.poll(); node != null; node=queue.poll()) {
+			if( node.l != null && node.r != null ) {
+				int deep = findMaxDeepnessRecursivelly(node, 0);
+				System.out.println("[root="+node+"][deep="+deep+"]");
+				if( deep > maxd.get() ) {
+					maxd.set(deep);
+					maxr.set(node);
+				}
+			}
+			if( node.l != null ) {
+				queue.add(node.l);
+			}
+			if( node.r != null ) {
+				queue.add(node.r);
+			}
+		}
+		
+		System.out.println("====================\nMAX[root="+maxr.get()+"][deep="+maxd.get()+"]");
+		
+		TreeSet<Integer> treeSet = new TreeSet<Integer>();
+		selectPerfectNodesRecursivelly(maxr.get(), maxd.get(), treeSet);
+		
+		return treeSet;
+	}
 }

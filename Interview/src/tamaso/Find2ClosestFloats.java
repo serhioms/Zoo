@@ -1,4 +1,4 @@
-package tamazon;
+package tamaso;
 
 import static org.junit.Assert.assertEquals;
 

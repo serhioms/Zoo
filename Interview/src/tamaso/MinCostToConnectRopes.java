@@ -1,4 +1,4 @@
-package tamazon;
+package tamaso;
 
 import static org.junit.Assert.assertEquals;
 
@@ -12,8 +12,7 @@ import org.junit.Test;
 import java8.lambdas.Arrays2List;
 
 /*
- * Amazon | OA 2019 | Min Cost to Connect Ropes
- * https://leetcode.com/discuss/interview-question/344677
+ * Min Cost to Connect Ropes
  * 
  * Given n ropes of different lengths, we need to connect these ropes into one rope. 
  * We can connect only 2 ropes at a time. The cost required to connect 2 ropes is equal to sum of their lengths. 

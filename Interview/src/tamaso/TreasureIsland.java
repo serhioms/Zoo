@@ -1,4 +1,4 @@
-package tamazon;
+package tamaso;
 
 import static org.junit.Assert.assertEquals;
 
@@ -9,8 +9,7 @@ import org.junit.Test;
 
 import java8.lambdas.Arrays2List;
 /*
- * Amazon | OA 2019 | Treasure Island
- * https://leetcode.com/discuss/interview-question/347457
+ * Treasure Island
  * 
  * Assume the map area is a two dimensional grid, represented by a matrix of characters. 
  * You must start from the top-left corner of the map and can move one block up, down, left or right at a time. 

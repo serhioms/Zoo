@@ -26,7 +26,8 @@ public class PerfectBinaryTree {
 
 	@Test
     public void testPerfect() {
-        assertEquals("[3, 5, 6, 7, 8, 9, 10]", Tree.findMaxPerfect(root).toString());
+        assertEquals("[3, 5, 6, 7, 8, 9, 10]", Tree.findMaxPerfectT(root).toString());
+        assertEquals("[3, 5, 6, 7, 8, 9, 10]", Tree.findMaxPerfectQ(root).toString());
 	}
 
 	@Test
