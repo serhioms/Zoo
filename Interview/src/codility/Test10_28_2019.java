@@ -8,10 +8,9 @@ import java.util.Set;
 
 import org.junit.Test;
 
-public class CodilityTest10_28_2019 {
+public class Test10_28_2019 {
 
 	public int solution1(int[] A) {
-		// write your code in Java SE 8
 		if( A == null || A.length == 0 ) {
 			throw new RuntimeException("Input array must not be empty.");
 		}
@@ -37,7 +36,6 @@ public class CodilityTest10_28_2019 {
 	}
 
 	public String solution2(String S) {
-		// write your code in Java SE 8
 		Set<Character> set = new HashSet<>();
 
 		Optional<Character> max = S.chars().mapToObj(c -> (char) c)
@@ -51,7 +49,6 @@ public class CodilityTest10_28_2019 {
 			.map(c->Character.toLowerCase(c))
 			.max((a, b) -> Character.compare(a, b));
 
-		System.out.println(set);
 		return max.isPresent()?max.get().toString().toUpperCase(): "NO";
 	}
 
