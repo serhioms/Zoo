@@ -89,7 +89,7 @@ public class TreasureIsland {
         System.out.println( String.join("\n",Arrays2List.toListOfString(grid)));
 		assertEquals(5, minSteps(copy=Arrays2List.copyOf(grid)));
 
-        assertEquals("[0123, D2D4, 4345, XDD.]", Arrays2List.toListOfString(copy));
+        assertEquals("[0123, D2D4, 4345, XDD.]", Arrays2List.toListOfString(copy).toString());
 		assertEquals(10, sol2Count);
 	}
 
