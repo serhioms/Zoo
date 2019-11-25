@@ -7,7 +7,9 @@ import java.util.stream.Collectors;
 public class Arrays2List {
 
 	public static List<Integer> toListOf(int[] arr) {
-		return Arrays.stream(arr).boxed().collect(Collectors.toList());
+		return Arrays.stream(arr)
+				.boxed() // int -> Integer
+				.collect(Collectors.toList());
 	}
 
 	public static List<Double> toListOf(double[] arr) {
@@ -15,10 +17,12 @@ public class Arrays2List {
 	}
 
 	public static List<String> toListOfString(char[][] arr) {
-		 return Arrays.stream(arr).map(a->new String(a)).collect(Collectors.toList());
+		 return Arrays.stream(arr)
+				 .map(a->new String(a)) // char[] -> String
+				 .collect(Collectors.toList());
 	}
 
-	public static char[][] copyOf(char[][] grid) {
+	public static char[][] duplicateOf(char[][] grid) {
 		char[][] newone = new char[grid.length][];
 		for(int i=0; i<newone.length; i++) {
 			newone[i] = Arrays.copyOf(grid[i], grid[i].length);

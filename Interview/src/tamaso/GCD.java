@@ -10,8 +10,8 @@ public class GCD {
 
 	@Test
 	public void test1() {
+		assertEquals(2, generalizedGCD(5, new int[] { 4, 8, 0, 10 }));
 		assertEquals(1, generalizedGCD(5, new int[] { 3, 5, 7, 9 }));
-		assertEquals(4, generalizedGCD(5, new int[] { 4, 8, 0, 10 }));
 		assertEquals(2, generalizedGCD(5, new int[] { 2, 4, 6, 0, 10 }));
 		assertEquals(2, generalizedGCD(5, new int[] { 2, 4, 6, 8, 10 }));
 		assertEquals(2, generalizedGCD(5, new int[] { 2, 4, 6, 8, 10, 11, 12, 13 }));
@@ -43,7 +43,7 @@ public class GCD {
 	public int isGCD(int num, int[] arr, int gcd) {
 		for (int i = 0; i < num; i++) {
 			if (arr[i] > 0) {
-				if (arr[i] < gcd || arr[i] % gcd == 1) {
+				if ( arr[i] % gcd != 0) {
 					return -1;
 				}
 			}

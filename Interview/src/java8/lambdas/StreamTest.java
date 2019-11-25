@@ -23,7 +23,7 @@ public class StreamTest {
 		
 		System.out.println(totalProfit);
 		
-		assertEquals(6.0, totalProfit, 0.1);
+		assertEquals(10*0.9*0.9*0.9*0.9*0.9, totalProfit, 0.1);
 	}
 
 }
