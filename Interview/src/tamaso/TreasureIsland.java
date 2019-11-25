@@ -41,6 +41,7 @@ public class TreasureIsland {
 
 	int sol1Count = 0;
 	int sol2Count = 0;
+	int sol3Count = 0;
 	
 	private String foundTreasure(char[][] grid, int r, int c, String result) {
 		if( !isSafe(grid, r, c) ) {
@@ -88,6 +89,7 @@ public class TreasureIsland {
 
         System.out.println( String.join("\n",Arrays2List.toListOfString(grid)));
 		assertEquals(5, minSteps(copy=Arrays2List.copyOf(grid)));
+		assertEquals(5, minSteps2(copy=Arrays2List.copyOf(grid)));
 
         assertEquals("[0123, D2D4, 4345, XDD.]", Arrays2List.toListOfString(copy).toString());
 		assertEquals(10, sol2Count);
@@ -123,6 +125,38 @@ public class TreasureIsland {
                         }
                         System.out.println("\n"+String.join("\n",Arrays2List.toListOfString(grid)));
                         q.add(new Point(r, c));
+                    }
+                }
+            }
+        }
+        
+        return -1;
+    }
+    
+    public int minSteps2(char[][] grid) {
+    	
+        Queue<int[]> q = new ArrayDeque<>();
+        q.add(new int[]{0, 0});
+        
+        grid[0][0] = (char)('0'+0); // mark as visited
+        
+        for (int steps=1; !q.isEmpty(); steps++) {
+            for (int i=q.size(); i > 0; i--) {
+            	int[] p = q.poll();
+            
+                for (int[] dir : DIRS) {
+                    int r = p[0] + dir[0];
+                    int c = p[1] + dir[1];
+                    
+                    if (isSafe(grid, r, c)) {
+                    	sol3Count++;
+                        if (grid[r][c] == 'X') {
+                        	return steps;
+                        } else {
+                        	grid[r][c] = (char)('0'+steps);
+                        }
+                        System.out.println("\n"+String.join("\n",Arrays2List.toListOfString(grid)));
+                        q.add(new int[]{r, c});
                     }
                 }
             }
