@@ -57,26 +57,40 @@ public class Tree {
     	public void visit(Tree t, int d);
     }
     
-    public static void travers(Tree t, Visitor v, int d) {
+    public static void traversR(Tree t, Visitor v, int d) { // deep first
     	if( t != null ){
     		v.visit(t, d);
-	    	travers(t.l, v, d-1);
-	    	travers(t.r, v, d+1);
+	    	traversR(t.l, v, d-1);
+	    	traversR(t.r, v, d+1);
     	}
 	}
     
-    public static void travers(Tree t, Visitor v) {
+    public static void traversR(Tree t, Visitor v) {	// deep first
     	if( t != null ){
     		v.visit(t, 0);
-	    	travers(t.l, v, -1);
-	    	travers(t.r, v, +1);
+	    	traversR(t.l, v, -1);
+	    	traversR(t.r, v, +1);
     	}
+	}
+    
+    public static void traversQ(Tree root, Visitor v) { // breaded first
+		LinkedList<Tree> queue = new LinkedList<Tree>();
+		queue.add(root);
+		for(Tree t=queue.poll(); t != null; t=queue.poll()) {
+    		v.visit(t, 0);
+			if( t.l != null ) {
+				queue.add(t.l);
+			}
+			if( t.r != null ) {
+				queue.add(t.r);
+			}
+		}
 	}
     
     public static void showTree(Tree root, int mid) {
 		IntStream.range(0, mid).forEach(i->System.out.print("\t"));
 		System.out.println(root);
-		Tree.travers(root, (t, d)->{
+		Tree.traversR(root, (t, d)->{
 			IntStream.range(0, d-1).forEach(i->System.out.print("\t"));
 			System.out.print(t.l==null?".":t.l);
 			IntStream.range(0, 2).forEach(i->System.out.print("\t"));
@@ -113,12 +127,36 @@ public class Tree {
 		}
 	}
 	
-	public static Set<Integer> findMaxPerfectT(Tree root) {
+	public static Set<Integer> findMaxPerfectRR(Tree root) {
 
 		AtomicInteger maxd = new AtomicInteger(0);
 		AtomicReference<Tree> maxr = new AtomicReference<Tree>(null);
 		
-		Tree.travers(root, (r, x)->{
+		Tree.traversR(root, (r, x)->{
+			if( r != null && r.l != null && r.r != null ) {
+				int deep = findMaxDeepnessRecursivelly(r, 0);
+				System.out.println("[root="+r+"][deep="+deep+"]");
+				if( deep > maxd.get() ) {
+					maxd.set(deep);
+					maxr.set(r);
+				}
+			}
+		});
+		
+		System.out.println("====================\nMAX[root="+maxr.get()+"][deep="+maxd.get()+"]");
+		
+		TreeSet<Integer> treeSet = new TreeSet<Integer>();
+		selectPerfectNodesRecursivelly(maxr.get(), maxd.get(), treeSet);
+		
+		return treeSet;
+	}
+	
+	public static Set<Integer> findMaxPerfectQR(Tree root) {
+
+		AtomicInteger maxd = new AtomicInteger(0);
+		AtomicReference<Tree> maxr = new AtomicReference<Tree>(null);
+		
+		Tree.traversQ(root, (r, x)->{
 			if( r != null && r.l != null && r.r != null ) {
 				int deep = findMaxDeepnessRecursivelly(r, 0);
 				System.out.println("[root="+r+"][deep="+deep+"]");

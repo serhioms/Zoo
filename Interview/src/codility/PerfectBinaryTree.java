@@ -26,7 +26,7 @@ public class PerfectBinaryTree {
 
 	@Test
     public void testPerfect() {
-        assertEquals("[3, 5, 6, 7, 8, 9, 10]", Tree.findMaxPerfectT(root).toString());
+        assertEquals("[3, 5, 6, 7, 8, 9, 10]", Tree.findMaxPerfectRR(root).toString());
         assertEquals("[3, 5, 6, 7, 8, 9, 10]", Tree.findMaxPerfectQ(root).toString());
 	}
 
@@ -37,7 +37,7 @@ public class PerfectBinaryTree {
 
 	@Test
     public void testTreeFullPath() {
-		Tree.travers(root, (t, d)->{
+		Tree.traversR(root, (t, d)->{
 			System.out.println(t);
 		}, 0);
 	}
