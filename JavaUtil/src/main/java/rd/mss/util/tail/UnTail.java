@@ -9,7 +9,6 @@ public final class UnTail {
 
 	static byte[] buffer = new byte[1000000];
 
-	public static String BASE_FOLDER = "C:\\tdmss\\workspace\\test\\zip";
 	public static String TAIL_MARKER = "pspdpfpgphpjpkpl";
 	
 	static String HEADER_MARKER = "PK";
@@ -17,11 +16,16 @@ public final class UnTail {
 	static byte[] HEADER_MARKER_BYTES = stringToBytesASCII(HEADER_MARKER);
 	static int HEADER_MARKER_INT = HEADER_MARKER.length();
 	static int TAIL_MARKER_INT = TAIL_MARKER.length();
+	
+	static String BASE_FOLDER = null;
 
 	public static void main(String[] args) throws IOException {
-		String picFileName = args.length > 0 && !"null".equals(args[0])? args[0]: throwFileNotFoundException();
-		BASE_FOLDER = args.length > 1 && !"null".equals(args[1])? args[1]: BASE_FOLDER;
-
+		String picFilePath = args.length > 0 && !"null".equals(args[0])? args[0]: throwFileNotFoundException();
+		File picFile = new File(picFilePath);
+		
+		BASE_FOLDER = picFile.getParentFile().getAbsolutePath();
+		String picFileName = picFile.getName();
+		
 		untail(picFileName, picFileName + ".zip", BASE_FOLDER);
 	}
 
