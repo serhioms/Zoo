@@ -75,7 +75,7 @@ public class TestPojoTransformer extends TestBase {
 		long start=0, finish=0;
 		try {
 			
-			SimpleSource source = JacksonUtil.readValue(FileNioUtil.getClassLoaderPath("transform/source-simple.json"), SimpleSource.class); 
+			SimpleSource source = JacksonUtil.readFile2Class(FileNioUtil.getClassLoaderPath("transform/source-simple.json"), SimpleSource.class); 
 			assertNotNull(source);
 	
 			PojoTransformer transformer = new PojoTransformer(FileNioUtil.read2String(FileNioUtil.getClassLoaderPath("transform/MapperSimpleTarget.json")));
@@ -102,7 +102,7 @@ public class TestPojoTransformer extends TestBase {
 			assertNotNull(target.get());
 	
 			String expected = FileNioUtil.read2String(FileNioUtil.getClassLoaderPath("transform/target-simple-expected.json"));
-			String actual = JacksonUtil.serialize(target.get());
+			String actual = JacksonUtil.writeJson(target.get());
 
 			if( max == 1 ){
 				System.out.printf("Expected: %s\n", expected);
@@ -123,7 +123,7 @@ public class TestPojoTransformer extends TestBase {
 		long start=0, finish=0;
 		try {
 			
-			ComplexSource source = JacksonUtil.readValue(FileNioUtil.getClassLoaderPath("transform/source-complex.json"), ComplexSource.class); 
+			ComplexSource source = JacksonUtil.readFile2Class(FileNioUtil.getClassLoaderPath("transform/source-complex.json"), ComplexSource.class); 
 			assertNotNull(source);
 	
 			PojoTransformer transformer = new PojoTransformer(FileNioUtil.read2String(FileNioUtil.getClassLoaderPath("transform/MapperComplexTarget.json")));
@@ -135,7 +135,7 @@ public class TestPojoTransformer extends TestBase {
 			event.setEventStatusCd("SUCCESS");
 			event.setEventTypeCd("SUBMIT_ORIGINATION");
 			@SuppressWarnings("unchecked")
-			Map<String, Object> eventMap = MapUtil.toMap(JacksonUtil.convertValue(event, Map.class));
+			Map<String, Object> eventMap = MapUtil.toMap(JacksonUtil.convertObject(event, Map.class));
 
 			Map<String, Object> metadataMap = MapUtil.toMap(
 					"reasonCodes","[CB3:CB3 Check, 02:Customer not within risk tolerance]",
@@ -182,7 +182,7 @@ public class TestPojoTransformer extends TestBase {
 			assertNotNull(target.get());
 	
 			String expected = FileNioUtil.read2String(FileNioUtil.getClassLoaderPath("transform/target-complex-expected.json"));
-			String actual = JacksonUtil.serialize(target.get());
+			String actual = JacksonUtil.writeJson(target.get());
 			
 			if( max == 1 ){
 				System.out.printf("Expected:  %s\n", expected);

@@ -1,6 +1,7 @@
 package ca.mss.utilms;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -9,8 +10,11 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -22,7 +26,7 @@ public class JacksonUtil {
 	private JacksonUtil() {
 	}
 
-	public static JsonNode readTree(File jsonFile) throws UtilException {
+	public static JsonNode readFile2Node(File jsonFile) throws UtilException {
 		try {
 			return mapper.readTree(jsonFile);
 		} catch (Exception e) {
@@ -30,39 +34,48 @@ public class JacksonUtil {
 		}
 	}
 
-	public static JsonNode readTree(String jsonStr) throws UtilException {
+	public static JsonNode readJson2NodeTree(String json) throws UtilException {
 		try {
-			return mapper.readTree(jsonStr);
+			return mapper.readTree(json);
 		} catch (Exception e) {
-			throw new UtilException("Can't read json node tree from json: "+jsonStr, e);
+			throw new UtilException("Can't read json node tree from json: "+json, e);
 		}
 	}
 
-	public static Map<String, Object> readMap(InputStream in) throws UtilException {
+	public static Map<String, Object> readStream2Map(InputStream in) throws UtilException {
 		try {
-	    	return convertValue(readValue(in, JsonNode.class), new TypeReference<Map<String, Object>>() {});
-		} catch (Exception e) {
-			throw new UtilException("Can't read Map<String,Object> from stream", e);
-		}
-	}
-
-	public static Map<String, Object> readMap2(String json) throws UtilException {
-		try {
-	    	return convertValue(readValue(json, JsonNode.class), new TypeReference<Map<String, Object>>() {});
+	    	return convertNode(readStream2Class(in, JsonNode.class), new TypeReference<Map<String, Object>>() {});
 		} catch (Exception e) {
 			throw new UtilException("Can't read Map<String,Object> from stream", e);
 		}
 	}
 
-	public static Map<String, Object> readMap(String json) throws UtilException {
+	public static Map<String, Object> readJson2MapRef(String json) throws UtilException {
 		try {
-	    	return convertValue(readValue(json, JsonNode.class), Map.class);
+	    	return convertNode(readJson2Node(json), new TypeReference<Map<String, Object>>() {});
 		} catch (Exception e) {
 			throw new UtilException("Can't read Map<String,Object> from stream", e);
 		}
 	}
 
-	public static <O> O readValue(InputStream in, Class<O> clazz) throws UtilException {
+	@SuppressWarnings("unchecked")
+	public static Map<String, Object> readJson2Map(String json) throws UtilException {
+		try {
+	    	return convertObject(readJson2Node(json), Map.class);
+		} catch (Exception e) {
+			throw new UtilException("Can't read Map<String,Object> from stream", e);
+		}
+	}
+
+	public static JsonNode readJson2Node(String json) throws UtilException {
+		try {
+	    	return readClass(json, JsonNode.class);
+		} catch (Exception e) {
+			throw new UtilException("Can't read json node from string", e);
+		}
+	}
+
+	public static <O> O readStream2Class(InputStream in, Class<O> clazz) throws UtilException {
 		try {
 			return mapper.readValue(in, clazz);
 		} catch (Exception e) {
@@ -70,19 +83,19 @@ public class JacksonUtil {
 		}
 	}
 
-	public static <O> O readValue(Path path, Class<O> clazz) throws UtilException {
+	public static <O> O readFile2Class(Path path, Class<O> clazz) throws UtilException {
 		try {
-			return convertValue(readMap(FileNioUtil.read2Stream(path)), clazz);
+			return convertMap(readStream2Map(FileNioUtil.read2Stream(path)), clazz);
 		} catch(IllegalArgumentException e){
 			throw new UtilException("Can't read value "+clazz.getSimpleName()+" from file "+path, e);
 		}
 	}
 
-	public static <O> O convertValue(Object o, Class<O> clazz) {
+	public static <O> O convertObject(Object o, Class<O> clazz) {
 		return mapper.convertValue(o, clazz);
 	}
 	
-	public static <O> O convertValue(Map<String, Object> map, Class<O> clazz) {
+	public static <O> O convertMap(Map<String, Object> map, Class<O> clazz) {
 		return mapper.convertValue(map, clazz);
 	}
 
@@ -106,23 +119,15 @@ public class JacksonUtil {
         return accomulatedFields;
     }
 	
-	public static <O> O readValue(String json, Class<O> clazz) throws Exception {
-		try {
-			return mapper.readValue(json, clazz);
-		} catch (Exception e) {
-			throw new UtilException("Can't read value "+clazz.getSimpleName()+" from string "+json, e);
-		}
-	}
-
-	public static <O> O convertValue(JsonNode jsonNode, TypeReference<O> typeReference) {
+	public static <O> O convertNode(JsonNode jsonNode, TypeReference<O> typeReference) {
 		return mapper.convertValue(jsonNode, typeReference);
 	}
 
-	public static <O> O deserialize(String json, Class<O> clazz) throws Exception {
+	public static <O> O readClass(String json, Class<O> clazz) throws JsonParseException, JsonMappingException, IOException {
 		return mapper.readValue(json, clazz);
 	}
 	
-	public static String serialize(Object object) throws Exception {
+	public static String writeJson(Object object) throws JsonProcessingException{
     	return mapper.writeValueAsString(object);
     }
 

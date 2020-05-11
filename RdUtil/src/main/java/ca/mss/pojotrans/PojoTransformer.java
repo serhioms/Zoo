@@ -61,14 +61,14 @@ public class PojoTransformer {
 	
 	public PojoTransformer(File mapperFile) throws PojoTransformerException {
 		try {
-			this.mapper = JacksonUtil.readTree(mapperFile);
+			this.mapper = JacksonUtil.readFile2Node(mapperFile);
 		} catch (Exception e) {
 			throw new PojoTransformerException("Cant instantiate transformer from File", e);
 		}
 	}
 	public PojoTransformer(String mapperJson) throws PojoTransformerException {
 		try {
-			this.mapper = JacksonUtil.readTree(mapperJson);
+			this.mapper = JacksonUtil.readJson2NodeTree(mapperJson);
 		} catch (Exception e) {
 			throw new PojoTransformerException("Cant instantiate transformer from json String", e);
 		}
@@ -83,7 +83,7 @@ public class PojoTransformer {
 	public final <T> T transform(Map<String,Object> cache, Object o, Class<T> clazz, Map<String,Object>... maps) throws TransformerException {
 		T t = null;
 		try {
-			JsonNode valueNode = JacksonUtil.convertValue(o, JsonNode.class);
+			JsonNode valueNode = JacksonUtil.convertObject(o, JsonNode.class);
 			t = createObject(clazz, mapper.get(clazz.getSimpleName()), valueNode, cache, maps);
 		} catch (Exception e){
 			throw new TransformerException("Cant transform object "+o.getClass().getSimpleName()+" to "+clazz.getSimpleName(), e);
