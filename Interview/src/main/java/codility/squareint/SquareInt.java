@@ -1,4 +1,4 @@
-package codility;
+package codility.squareint;
 
 import java.util.stream.IntStream;
 

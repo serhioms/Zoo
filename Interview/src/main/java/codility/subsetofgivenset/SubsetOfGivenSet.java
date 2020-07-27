@@ -1,9 +1,8 @@
-package codility;
+package codility.subsetofgivenset;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -11,9 +10,8 @@ import java.util.Stack;
 import java.util.stream.IntStream;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
 
-public class TestAllSubsetOfGivenSet {
+public class SubsetOfGivenSet {
 
 	@Test
 	public void test() {

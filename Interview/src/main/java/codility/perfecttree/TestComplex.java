@@ -1,10 +1,10 @@
-package codility;
+package codility.perfecttree;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-public class PerfectBinaryTree2 {
+public class TestComplex {
 
 	@Test
     public void test1() {
@@ -38,8 +38,9 @@ public class PerfectBinaryTree2 {
 							)
 					);
 
-        assertEquals("[3, 5, 6, 7, 8, 9, 10]", Tree.findMaxPerfectRR(root).toString());
-        assertEquals("[3, 5, 6, 7, 8, 9, 10]", Tree.findMaxPerfectQR(root).toString());
+        assertEquals("[3, 5, 6, 7, 8, 9, 10]", new PerfectTreeRecursion().findMaxPerfect(root).toString());
+        assertEquals("[3, 5, 6, 7, 8, 9, 10]", new PerfectTreeBreadedFirst().findMaxPerfect(root).toString());
+        assertEquals("[3, 5, 6, 7, 8, 9, 10]", new PerfectTreeQueue().findMaxPerfect(root).toString());
 	}
 
 	@Test
@@ -63,8 +64,9 @@ public class PerfectBinaryTree2 {
 						)
 			;
 		
-        assertEquals("[3, 5, 6, 7, 8, 9, 10]", Tree.findMaxPerfectRR(root).toString());
-        assertEquals("[3, 5, 6, 7, 8, 9, 10]", Tree.findMaxPerfectQR(root).toString());
+        assertEquals("[3, 5, 6, 7, 8, 9, 10]", new PerfectTreeRecursion().findMaxPerfect(root).toString());
+        assertEquals("[3, 5, 6, 7, 8, 9, 10]", new PerfectTreeBreadedFirst().findMaxPerfect(root).toString());
+        assertEquals("[3, 5, 6, 7, 8, 9, 10]", new PerfectTreeQueue().findMaxPerfect(root).toString());
 	}
 
 	@Test
@@ -105,8 +107,10 @@ public class PerfectBinaryTree2 {
 		
 		Tree.showTree(root, 7);
 		
-        assertEquals("[4, 44, 45, 441, 442, 451, 452]", Tree.findMaxPerfectRR(root).toString());
-        assertEquals("[3, 5, 6, 7, 8, 9, 10]", Tree.findMaxPerfectQR(root).toString());
+        assertEquals("[4, 44, 45, 441, 442, 451, 452]", new PerfectTreeRecursion().findMaxPerfect(root).toString());
+        assertEquals("[3, 5, 6, 7, 8, 9, 10]", new PerfectTreeBreadedFirst().findMaxPerfect(root).toString());
+        assertEquals("[3, 5, 6, 7, 8, 9, 10]", new PerfectTreeQueue().findMaxPerfect(root).toString());
+
 	}
 	
 	@Test
@@ -153,8 +157,9 @@ public class PerfectBinaryTree2 {
 		
 		Tree.showTree(root, 7);
 		
-        assertEquals("[4, 44, 45, 441, 442, 451, 452, 4411, 4412, 4421, 4422, 4511, 4512, 4521, 4522]", Tree.findMaxPerfectRR(root).toString());
-        assertEquals("[4, 44, 45, 441, 442, 451, 452, 4411, 4412, 4421, 4422, 4511, 4512, 4521, 4522]", Tree.findMaxPerfectQR(root).toString());
+        assertEquals("[4, 44, 45, 441, 442, 451, 452, 4411, 4412, 4421, 4422, 4511, 4512, 4521, 4522]", new PerfectTreeRecursion().findMaxPerfect(root).toString());
+        assertEquals("[4, 44, 45, 441, 442, 451, 452, 4411, 4412, 4421, 4422, 4511, 4512, 4521, 4522]", new PerfectTreeBreadedFirst().findMaxPerfect(root).toString());
+        assertEquals("[4, 44, 45, 441, 442, 451, 452, 4411, 4412, 4421, 4422, 4511, 4512, 4521, 4522]", new PerfectTreeQueue().findMaxPerfect(root).toString());
 	}
 	
 	@Test
@@ -216,8 +221,9 @@ public class PerfectBinaryTree2 {
 
 		Tree.showTree(root, 10);
 
-        assertEquals("[4, 44, 45, 441, 442, 451, 452, 4411, 4412, 4421, 4422, 4511, 4512, 4521, 4522]", Tree.findMaxPerfectRR(root).toString());
-        assertEquals("[4, 44, 45, 441, 442, 451, 452, 4411, 4412, 4421, 4422, 4511, 4512, 4521, 4522]", Tree.findMaxPerfectQR(root).toString());
+        assertEquals("[4, 44, 45, 441, 442, 451, 452, 4411, 4412, 4421, 4422, 4511, 4512, 4521, 4522]", new PerfectTreeRecursion().findMaxPerfect(root).toString());
+        assertEquals("[4, 44, 45, 441, 442, 451, 452, 4411, 4412, 4421, 4422, 4511, 4512, 4521, 4522]", new PerfectTreeBreadedFirst().findMaxPerfect(root).toString());
+        assertEquals("[4, 44, 45, 441, 442, 451, 452, 4411, 4412, 4421, 4422, 4511, 4512, 4521, 4522]", new PerfectTreeQueue().findMaxPerfect(root).toString());
 	}
 	
 	@Test
@@ -292,8 +298,9 @@ public class PerfectBinaryTree2 {
 						)
 			;
 		
-        assertEquals("[64, 644, 645, 6441, 6442, 6451, 6452]", Tree.findMaxPerfectRR(root).toString());
-        assertEquals("[3, 5, 6, 7, 8, 9, 10]", Tree.findMaxPerfectQR(root).toString());
+        assertEquals("[64, 644, 645, 6441, 6442, 6451, 6452]", new PerfectTreeRecursion().findMaxPerfect(root).toString());
+        assertEquals("[3, 5, 6, 7, 8, 9, 10]", new PerfectTreeBreadedFirst().findMaxPerfect(root).toString());
+        assertEquals("[3, 5, 6, 7, 8, 9, 10]", new PerfectTreeQueue().findMaxPerfect(root).toString());
 	}
 	@Test
 	public void test51(){
@@ -369,8 +376,9 @@ public class PerfectBinaryTree2 {
 						)
 			;
 		
-        assertEquals("[84, 844, 845, 8441, 8442, 8451, 8452, 84411, 84412, 84421, 84422, 84511, 84512, 84521, 84522]", Tree.findMaxPerfectRR(root).toString());
-        assertEquals("[84, 844, 845, 8441, 8442, 8451, 8452, 84411, 84412, 84421, 84422, 84511, 84512, 84521, 84522]", Tree.findMaxPerfectQR(root).toString());
+        assertEquals("[84, 844, 845, 8441, 8442, 8451, 8452, 84411, 84412, 84421, 84422, 84511, 84512, 84521, 84522]", new PerfectTreeRecursion().findMaxPerfect(root).toString());
+        assertEquals("[84, 844, 845, 8441, 8442, 8451, 8452, 84411, 84412, 84421, 84422, 84511, 84512, 84521, 84522]", new PerfectTreeBreadedFirst().findMaxPerfect(root).toString());
+        assertEquals("[84, 844, 845, 8441, 8442, 8451, 8452, 84411, 84412, 84421, 84422, 84511, 84512, 84521, 84522]", new PerfectTreeQueue().findMaxPerfect(root).toString());
 	}
 	
 }
