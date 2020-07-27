@@ -1,4 +1,4 @@
-package tamaso;
+package amazon;
 
 import static org.junit.Assert.assertEquals;
 
