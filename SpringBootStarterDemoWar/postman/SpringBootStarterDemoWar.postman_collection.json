@@ -1,0 +1,82 @@
+{
+	"variables": [],
+	"info": {
+		"name": "SpringBootStarterDemoWar",
+		"_postman_id": "62d33e00-3d7b-5d8f-b625-6cd501a62100",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Select All Student",
+			"request": {
+				"url": "http://localhost:8083/student/allstudent",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Register Student",
+			"request": {
+				"url": "http://localhost:8083/register/student",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"Ankit\",\n\t\"age\": 25,\n\t\"registrationNumber\": \"12345\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update Student copy",
+			"request": {
+				"url": "http://localhost:8083/update/student",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"Ankit\",\n\t\"age\": 35,\n\t\"registrationNumber\": \"12345\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update Student copy copy",
+			"request": {
+				"url": "http://localhost:8083/delete/student/12345",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"Ankit\",\n\t\"age\": 35,\n\t\"registrationNumber\": \"12345\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
