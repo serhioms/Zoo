@@ -26,7 +26,7 @@ public class TestSimpleTree {
 
 	@Test
     public void test() {
-        assertEquals("[3, 5, 6, 7, 8, 9, 10]", new PerfectTree().findMaxPerfectNodes(root).toString());
+        assertEquals("[3, 5, 6, 7, 8, 9, 10]", new PerfectTree().findMaxPerfectTree(root).toString());
 	}
 
 	@Test

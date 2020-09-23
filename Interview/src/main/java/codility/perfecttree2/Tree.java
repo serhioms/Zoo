@@ -1,5 +1,6 @@
 package codility.perfecttree2;
 
+import java.util.function.BiFunction;
 import java.util.stream.IntStream;
 
 public class Tree {
@@ -44,19 +45,26 @@ public class Tree {
 		this.r = r;
 		return this;
 	}
+
+	/*
+	 * Perfect leaf/node 
+	 */
+	public boolean isPerfectNode() {
+		return l != null && r != null;
+	}
+	
+	public boolean isPerfectLeaf() {
+		return l == null && r == null;
+	}
 	
 	/*
 	 * Tree traversal 
 	 */
-    public static interface Visitor {
-    	public boolean visit(Tree node, int deep);
-    }
-    
-    public static void traversTree(int deep, Tree node, Visitor v) {
+    public static void travers(int deep, Tree node, BiFunction<Tree, Integer, Boolean> v) {
     	if( node != null ){
-    		if( v.visit(node, deep) ) {
-		    	traversTree(deep+1, node.l, v);
-		    	traversTree(deep+1, node.r, v);
+    		if( v.apply(node, deep) ) {
+		    	travers(deep+1, node.l, v);
+		    	travers(deep+1, node.r, v);
     		}
     	}
 	}
@@ -67,7 +75,7 @@ public class Tree {
     public static void showTree(Tree root, int mid) {
 		IntStream.range(0, mid).forEach(i->System.out.print("\t"));
 		System.out.println(root);
-		Tree.traversTree(mid, root, (t, d)->{
+		Tree.travers(mid, root, (t, d)->{
 			IntStream.range(0, d-1).forEach(i->System.out.print("\t"));
 			System.out.print(t.l==null?".":t.l);
 			IntStream.range(0, 2).forEach(i->System.out.print("\t"));
@@ -75,5 +83,4 @@ public class Tree {
 			return true;
 		});
 	}
-
 }
