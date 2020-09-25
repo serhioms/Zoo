@@ -1,4 +1,4 @@
-package scotia.subset;
+package codility.maxsum;
 
 import static org.junit.Assert.assertEquals;
 
@@ -9,6 +9,9 @@ public class MaxSum {
 	@Test
 	public void test() {
 		assertEquals(5, solutionBeautiful(new int[] { 3, 2, -6, 4, 0 }));
+		assertEquals(7, solutionBeautiful(new int[] { 3, 2, -6, 7, 0 }));
+		assertEquals(6, solutionBeautiful(new int[] { 3, 2, -6, 6, 0 }));
+		assertEquals(5, solutionBeautiful(new int[] { 3, 2, -6, 5, 0 }));
 		assertEquals(-1000000, solutionBeautiful(new int[] {}));
 		assertEquals(-6, solutionBeautiful(new int[] { -6 }));
 		assertEquals(-5, solutionBeautiful(new int[] { -6, -5 }));
