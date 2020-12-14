@@ -48,6 +48,7 @@ public class HighPair {
 		return max.isPresent()?max.get().toString().toUpperCase(): "NO";
 	}
 
+	// 100%
 	public String findHighCharPairFast(String S) {
 		boolean[] charset = new boolean[1024];
 		
@@ -64,7 +65,7 @@ public class HighPair {
 	public void findHighCharPair() {
 		assertEquals("D",findHighCharPairTooSlow("aaBabcDad"));
 		assertEquals("D",findHighCharPairBitSlow("aaBabcDad"));
-		assertEquals("D",findHighCharPairFast("aaBabcDad"));
+		assertEquals("D",findHighCharPairFast("aaBabcDad")); // 100%
 		assertEquals("B",findHighCharPairTooSlow("aaBabcDaA"));
 		assertEquals("B",findHighCharPairBitSlow("aaBabcDaA"));
 		assertEquals("B",findHighCharPairFast("aaBabcDaA"));

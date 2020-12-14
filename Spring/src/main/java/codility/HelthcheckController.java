@@ -4,8 +4,6 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +18,9 @@ import org.springframework.web.server.ResponseStatusException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+// 100%
 @RestController
-public class CodilityController {
+public class HelthcheckController {
 
 	/*
 	 * http://localhost:8080/healthcheck?format=short
@@ -31,8 +30,7 @@ public class CodilityController {
 	 */
 
 	@GetMapping(value = "/healthcheck", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String> healthcheck(HttpServletRequest request,
-			@RequestParam(name = "format") String format) {
+	public ResponseEntity<String> healthcheck(@RequestParam(name = "format") String format) {
 		String curentDateTime = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
 
 		ObjectMapper mapper = new ObjectMapper();
