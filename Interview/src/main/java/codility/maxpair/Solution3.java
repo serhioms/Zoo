@@ -13,10 +13,13 @@ public class Solution3 {
 		Solution2 sol2 = new Solution2();
 		
 		long start = System.currentTimeMillis();
-		int[] a = sol2.initArray();
+		int[] a = Solution2.initArray();
 		int[] b = Arrays.copyOf(a, a.length);
 		int[] c = Arrays.copyOf(a, a.length);
 		int[] d = Arrays.copyOf(a, a.length);
+		int[] s = Arrays.copyOf(a, a.length);
+		Arrays.parallelSort(s);
+
 		long time = System.currentTimeMillis() - start;
 		System.out.println( "Initialization:" + time + " millisec");
 		
@@ -33,16 +36,21 @@ public class Solution3 {
 		start = System.currentTimeMillis();
 		int solutionResult3 = MaxPair.solutionFast(c);
 		time = System.currentTimeMillis() - start;
-		System.out.println( "solution3 execution: " + time + " millisec solutionResult3: " + solutionResult3 );
+		System.out.println( "solution3 execution: " + time + " millisec solutionResult3: " + solutionResult3);
 
 		start = System.currentTimeMillis();
-		int solutionResult4 = MaxPair.solutionSlow(d);
+		int solutionResult4 = MaxPair.solutionFastest(d);
 		time = System.currentTimeMillis() - start;
-		System.out.println( "solution4 execution: " + time + " millisec solutionResult4: " + solutionResult4 );
+		System.out.println( "solution5 execution: " + time + " millisec solutionResult4: " + solutionResult4);
+
+		start = System.currentTimeMillis();
+		int solutionResult5 = MaxPair.solutionSlow(d);
+		time = System.currentTimeMillis() - start;
+		System.out.println( "solution4 execution: " + time + " millisec solutionResult5: " + solutionResult5 );
 
 		assertEquals(solutionResult1, solutionResult2);
 		assertEquals(solutionResult1, solutionResult3);
-		assertEquals(solutionResult1, solutionResult4);
+		assertEquals(solutionResult1, solutionResult5);
 
 	}
 
