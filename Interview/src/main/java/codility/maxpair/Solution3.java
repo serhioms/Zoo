@@ -36,17 +36,17 @@ public class Solution3 {
 		start = System.currentTimeMillis();
 		int solutionResult3 = MaxPair.solutionFast(c);
 		time = System.currentTimeMillis() - start;
-		System.out.println( "solution3 execution: " + time + " millisec solutionResult3: " + solutionResult3);
+		System.out.println( "solutionFast execution: " + time + " millisec solutionResult3: " + solutionResult3);
 
 		start = System.currentTimeMillis();
 		int solutionResult4 = MaxPair.solutionFastest(d);
 		time = System.currentTimeMillis() - start;
-		System.out.println( "solution5 execution: " + time + " millisec solutionResult4: " + solutionResult4);
+		System.out.println( "solutionFastest execution: " + time + " millisec solutionResult4: " + solutionResult4);
 
 		start = System.currentTimeMillis();
 		int solutionResult5 = MaxPair.solutionSlow(d);
 		time = System.currentTimeMillis() - start;
-		System.out.println( "solution4 execution: " + time + " millisec solutionResult5: " + solutionResult5 );
+		System.out.println( "solutionSlow execution: " + time + " millisec solutionResult5: " + solutionResult5 );
 
 		assertEquals(solutionResult1, solutionResult2);
 		assertEquals(solutionResult1, solutionResult3);

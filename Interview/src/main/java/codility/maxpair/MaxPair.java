@@ -27,8 +27,8 @@ public class MaxPair {
 
 	@Test
 	public void test3() {
-		assertEquals(1, solutionFastest(new int[] { 1, 1, 2, -1, 2, -1 }));
-		assertEquals(1, solutionFast(new int[] { 1, 1, 2, -1, 2, -1 }));
+		assertEquals(0, solutionFastest(new int[] { 1, 2, 3, -4 }));
+		assertEquals(0, solutionFast(new int[] { 1, 2, 3, -4 }));
 		assertEquals(0, solutionSlow(new int[] { 1, 2, 3, -4 }));
 	}
 
@@ -59,7 +59,7 @@ public class MaxPair {
 		int n = Arrays.stream(A)
 				.filter(e->e<0)
 				.filter(e->Arrays.binarySearch(A, -e) >=0)
-				.map(e->Math.abs(e))
+				.map(Math::abs)
 				.findFirst()
 				.orElse(0);
 		long time = System.nanoTime() - start;
@@ -70,10 +70,14 @@ public class MaxPair {
 	// No sort + 1 loop + cache = slow 
 	static public int solutionSlow(int[] A) {
 		Set<Integer> set = new HashSet<>(Solution2.N);
-		return Arrays.stream(A)
+		long start = System.nanoTime();
+		int n = Arrays.stream(A)
 				.filter(e->set.contains(-e)? true: set.contains(e)? false: !set.add(e))
-				.map(e->Math.abs(e))
+				.map(Math::abs)
 				.max()
 				.orElse(0);
+		long time = System.nanoTime() - start;
+		System.out.println( "solutionSlow search = "+time+" nano");
+		return n;
 	}
 }
