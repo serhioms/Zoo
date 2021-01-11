@@ -43,10 +43,8 @@ public class HighPairPerfomance extends HighPair {
 			+"WeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAWeTestCodErszCodilityaaBabcDadaaBabcDaAZ"
 			;
 	
-	static double bestTime;
-	
 	@Test
-	public void perfomance1() {
+	public void findHighCharPairCharStream() {
 		
 		String result = "";
 		long start, finish;
@@ -54,18 +52,18 @@ public class HighPairPerfomance extends HighPair {
 		
 		start = System.currentTimeMillis();
 		for(int i=N; i>0; i--) {
-			result = findHighCharPairTooSlow(TEST_STR );
-			assertEquals("Z",result);
+			result = findHighCharPairCharStream(TEST_STR );
 		}
 		finish = System.currentTimeMillis();
 
-		bestTime = 0.63*(finish-start)/1000.0;
-		System.out.printf("Solution #1: %.1f sec (best %.1f sec)\n", (finish-start)/1000.0, bestTime);
+		assertEquals("Z",result);
+
+		System.out.printf("findHighCharPairCharStream: %.1f sec\n", (finish-start)/1000.0);
 	}
 
 
 	@Test
-	public void perfomance2() {
+	public void findHighCharPairIntStream() {
 		
 		String result = "";
 		long start, finish;
@@ -73,16 +71,17 @@ public class HighPairPerfomance extends HighPair {
 		
 		start = System.currentTimeMillis();
 		for(int i=N; i>0; i--) {
-			result = findHighCharPairFast(TEST_STR );
-			assertEquals("Z",result);
+			result = findHighCharPairIntStream(TEST_STR );
 		}
 		finish = System.currentTimeMillis();
-		System.out.printf("Solution #2: %.1f sec (best %.1f sec)\n", (finish-start)/1000.0, bestTime);
-	
+
+		assertEquals("Z",result);
+
+		System.out.printf("findHighCharPairIntStream: %.1f sec\n", (finish-start)/1000.0);
 	}
 
 	@Test
-	public void perfomance3() {
+	public void findHighCharPairCharStreamParallel() {
 		
 		String result = "";
 		long start, finish;
@@ -90,15 +89,31 @@ public class HighPairPerfomance extends HighPair {
 		
 		start = System.currentTimeMillis();
 		for(int i=N; i>0; i--) {
-			result = findHighCharPairBitSlow(TEST_STR );
-			assertEquals("Z",result);
+			result = findHighCharPairCharStreamParallel(TEST_STR );
 		}
 		finish = System.currentTimeMillis();
 
-		bestTime = 0.63*(finish-start)/1000.0;
-		System.out.printf("Solution #3: %.1f sec (best %.1f sec)\n", (finish-start)/1000.0, bestTime);
+		assertEquals("Z",result);
+
+		System.out.printf("findHighCharPairCharStreamParallel: %.1f sec\n", (finish-start)/1000.0);
 	}
 
+	@Test
+	public void findHighCharPairCharStreamParallelOptimize() {
+		
+		String result = "";
+		long start, finish;
+		int N = 50000;
+		
+		start = System.currentTimeMillis();
+		for(int i=N; i>0; i--) {
+			result = findHighCharPairCharStreamParallelOptimize(TEST_STR );
+		}
+		finish = System.currentTimeMillis();
 
+		assertEquals("Z",result);
+
+		System.out.printf("findHighCharPairCharStreamParallelOptimize: %.1f sec\n", (finish-start)/1000.0);
+	}
 
 }
