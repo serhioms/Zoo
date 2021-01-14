@@ -1,12 +1,14 @@
 package java7;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import org.junit.Test;
+
+import scala.Equals;
 
 public class ImmutableExamples {
 
@@ -17,7 +19,7 @@ public class ImmutableExamples {
 			unmodifiableList.add("d");
 			fail();
 		} catch(UnsupportedOperationException e){
-			
+			assertEquals("java.lang.UnsupportedOperationException", e.getClass().getName());
 		}
 	}
 

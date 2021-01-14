@@ -1,13 +1,13 @@
 package ca.interview.question;
 
-public class Test05 {
+public class TotalTryFinallyHang {
 
 	/*
 	 * Total hang!
 	 */
 	
 	public static void main(String[] args) {
-		new Test05().work();
+		new TotalTryFinallyHang().work();
 	}
 
 	public void work(){

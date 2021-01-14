@@ -4,7 +4,7 @@ import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
 
-public class TestQuestions {
+public class TestStringBuilder {
 
 	@Test
 	public void test01(){

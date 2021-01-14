@@ -1,4 +1,4 @@
-package ca.interview;
+package ca.interview.finalize;
 
 public class Finalization {
 

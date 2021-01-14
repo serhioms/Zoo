@@ -17,7 +17,7 @@ public class FindGivenSumFromAllSubsetsOfGivenSet {
      int max = nums.length;
      
      Stack<Integer> stack = new Stack<>();
-     IntStream.range(0,max).forEach(stack::add);
+     IntStream.range(0,max).forEach(stack::add); // populate indexes
 
      while( stack.size() > 0 ){        
 
@@ -30,7 +30,7 @@ public class FindGivenSumFromAllSubsetsOfGivenSet {
          int last = stack.pop()+1;
          
          if( stack.size() == 0 ){
-             IntStream.range(last,max).forEach(stack::add);
+             IntStream.range(last,max).forEach(stack::add); // populate indexes
          } else if( last < max) {
              stack.push(last);
          }
