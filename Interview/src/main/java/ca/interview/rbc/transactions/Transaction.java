@@ -4,6 +4,7 @@ import java.util.Random;
 
 public class Transaction {
 
+	public static final int TRANSACTION_SUM = 70;
 	public static final int TOTAL_ACCOUNTS = 831;
 	public static final int SELECTED_PERIOD_MLS = 500;
 	public static final int SUM_LIMIT_IN_SELECTED_PERIOD = 10000;
@@ -19,7 +20,7 @@ public class Transaction {
 
 	public Transaction() {
 		// constant transaction sum
-		sum = 70;
+		sum = Transaction.TRANSACTION_SUM;
 		
 		// There is no much difference in simulation if do sum slightly random
 		// sum += rand.nextBoolean()? rand.nextInt(5): -rand.nextInt(5);
