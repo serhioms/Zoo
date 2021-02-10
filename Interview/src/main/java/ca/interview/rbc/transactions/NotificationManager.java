@@ -2,34 +2,39 @@ package ca.interview.rbc.transactions;
 
 public class NotificationManager {
 
-	java.util.LinkedList<Transaction> linkedList = new java.util.LinkedList<>(); 
+	// Very fast!
+	java.util.LinkedList<Transaction> list = new java.util.LinkedList<>(); 
+	
+	// 10 times slower!
 	//java.util.concurrent.ConcurrentLinkedDeque<Transaction> list = new java.util.concurrent.ConcurrentLinkedDeque<>();
 	
 	int accsum = 0;
 	
 	public boolean isOverLimit(Transaction transaction, long timeline) {
 		try {
-			int addSum = transaction.sum;
-			int[] removeSumListSize = processSynch(timeline, transaction);
-			return transaction.isOverLimit(removeSumListSize[0]+addSum, removeSumListSize[1]+1);
+			int[] expiredData = expiredSynch(timeline, transaction);
+			// +1 for finally { *** }
+			return transaction.isOverLimit(expiredData[0], expiredData[1]);
 		} finally {
-			linkedList.add(transaction);
+			// Add new transaction sum to the tail of list asynchronously
+			list.addLast(transaction);
 		}
 	}
 
-	synchronized public int[] processSynch(long timeline, Transaction transaction) {
-		// Add new transaction sum to the tail of list
+	synchronized public int[] expiredSynch(long timeline, Transaction transaction) {
+		// Add new transaction sum
 		accsum += transaction.sum;
+		
 		// Remove expired transaction from the head of list
-		while( !linkedList.isEmpty() ) {
-			if( linkedList.getFirst().expired < timeline ) {
-				accsum -= linkedList.removeFirst().sum;
-				++transaction.accexp;
+		while( !list.isEmpty() ) {
+			if( list.getFirst().expired < timeline ) {
+				accsum -= list.removeFirst().sum;
+				++transaction.accremexp;
 			} else {
 				break;
 			}
 		}
-		return new int[] {accsum, linkedList.size()};
+		return new int[] {accsum, list.size()+1};
 	}
 
 }

@@ -4,10 +4,11 @@ import java.util.Random;
 
 public class Transaction {
 
+	public static final int SUM_LIMIT = 10000;
+	public static final int SUM_TIME_FRAME_MLS = 500;
+
 	public static final int TRANSACTION_SUM = 70;
 	public static final int TOTAL_ACCOUNTS = 831;
-	public static final int SELECTED_PERIOD_MLS = 500;
-	public static final int SUM_LIMIT_IN_SELECTED_PERIOD = 10000;
 
 	public static final Random rand = new Random(1010101);
 
@@ -16,7 +17,7 @@ public class Transaction {
 	public long expired;
 	
 	// Need it for print statistics
-	public int accsum=0, acctrans=0, accexp=0;
+	public int accsum=0, acclistsize=0, accremexp=0;
 
 	public Transaction() {
 		// constant transaction sum
@@ -31,13 +32,13 @@ public class Transaction {
 
 	public void setExpired(long start) {
 		// We do not care about when transaction starts but care when it get expire
-		this.expired = start+SELECTED_PERIOD_MLS;
+		this.expired = start+SUM_TIME_FRAME_MLS;
 	}
 
-	public boolean isOverLimit(int accsum, int acctrans) {
+	public boolean isOverLimit(int accsum, int acclistsize) {
 		this.accsum = accsum;
-		this.acctrans = acctrans;
-		return accsum > SUM_LIMIT_IN_SELECTED_PERIOD;
+		this.acclistsize = acclistsize;
+		return accsum > SUM_LIMIT;
 	}
 	
 }

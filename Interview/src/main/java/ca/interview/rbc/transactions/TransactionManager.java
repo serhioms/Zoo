@@ -54,7 +54,7 @@ public class TransactionManager {
 	Object notificationCounterMonitor = new Object();
 
 	private void notify(Transaction transaction, long startTransaction, long startTest) {
-		long timeslotNum = (startTransaction - startTest)/Transaction.SELECTED_PERIOD_MLS;
+		long timeslotNum = (startTransaction - startTest)/Transaction.SUM_TIME_FRAME_MLS;
 		String account = transaction.accountNum;
 		String key = account+":"+timeslotNum;
 		if( !notifiedTimeSlots.contains(key) ) {
@@ -63,8 +63,9 @@ public class TransactionManager {
 				notifiedAccounts.add(transaction.accountNum);
 				notifiedTimeSlots.add(key);
 			}
-			if( transaction.accexp > 0 ) {
-				System.out.printf("%3s) time slot=%2d Acc%3s = $%,d > $%,d (total %d - %d expired)\n", notificationCounter+"", timeslotNum, account, transaction.accsum, Transaction.SUM_LIMIT_IN_SELECTED_PERIOD, transaction.acctrans, transaction.accexp);
+			// Do not print all notifications but only most interesting which includes expired sums
+			if( transaction.accremexp > 0 ) {
+				System.out.printf("%3s) time slot=%2d Acc%3s = $%,d > $%,d (total %d - %d expired)\n", notificationCounter+"", timeslotNum, account, transaction.accsum, Transaction.SUM_LIMIT, transaction.acclistsize, transaction.accremexp);
 			}
 		}
 	}
