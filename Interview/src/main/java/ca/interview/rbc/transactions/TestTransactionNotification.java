@@ -16,7 +16,7 @@ public class TestTransactionNotification {
 
 	@Test
 	public void testMultithreadedImplementation() {
-		System.out.printf("\nMULTI-THREADS NOTIFICATIONS for contention of %,d threads %,d times\n", T, N);
+		System.out.printf("\nMULTI-THREADS NOTIFICATIONS with contention of %,d threads %,d times\n", T, N);
 
 		CyclicBarrier barrier = new CyclicBarrier(T);
 		CountDownLatch latch = new CountDownLatch(T);
@@ -73,7 +73,7 @@ public class TestTransactionNotification {
 
 	@Test
 	public void testSingleThreadedImplementation() {
-		System.out.printf("\nSINGLE-THRED NOTIFICATIONS for contention of %,d threads %,d times\n", T, N);
+		System.out.printf("\nSINGLE-THRED NOTIFICATIONS with contention of %,d threads %,d times\n", T, N);
 
 		CyclicBarrier barrier = new CyclicBarrier(T);
 		CountDownLatch latch = new CountDownLatch(T);
