@@ -10,12 +10,13 @@ import org.junit.Test;
 
 public class TestTransactionNotification {
 
+	final int T = 1000;
+	final int N = 1000;
+
+
 	@Test
 	public void testMultithreadedImplementation() {
-		System.out.printf("\nMULTI-THREADS NOTIFICATIONS\n");
-
-		final int T = 1000;
-		final int N = 1000;
+		System.out.printf("\nMULTI-THREADS NOTIFICATIONS for contention of %,d threads %,d times\n", T, N);
 
 		CyclicBarrier barrier = new CyclicBarrier(T);
 		CountDownLatch latch = new CountDownLatch(T);
@@ -72,10 +73,7 @@ public class TestTransactionNotification {
 
 	@Test
 	public void testSingleThreadedImplementation() {
-		System.out.printf("\nSINGLE-THRED NOTIFICATIONS\n");
-
-		final int T = 1000;
-		final int N = 1000;
+		System.out.printf("\nSINGLE-THRED NOTIFICATIONS for contention of %,d threads %,d times\n", T, N);
 
 		CyclicBarrier barrier = new CyclicBarrier(T);
 		CountDownLatch latch = new CountDownLatch(T);

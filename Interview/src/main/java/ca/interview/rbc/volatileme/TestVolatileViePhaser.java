@@ -65,7 +65,7 @@ public class TestVolatileViePhaser {
 
 		long end = System.currentTimeMillis();
 		
-		System.out.printf("\n PHASER execution time for %,d threads = %,d mls\n", T, end-start);
+		System.out.printf("\n PHASER execution time for contention of %,d threads = %,d mls\n", T, end-start);
 		System.out.printf("++      Sync volatile = %,12d mls\n", finish[0].get());
 		System.out.printf("++      Lock volatile = %,12d mls\n", finish[5].get());
 		System.out.printf("++  Lock non volatile = %,12d mls\n", finish[6].get());
