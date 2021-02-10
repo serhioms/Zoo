@@ -13,6 +13,7 @@ public class TestTransactionNotification {
 	final int T = 1000;
 	final int N = 1000;
 
+	Object minmaxTimeMonitor = new Object();
 
 	@Test
 	public void testMultithreadedImplementation() {
@@ -22,29 +23,37 @@ public class TestTransactionNotification {
 		CountDownLatch latch = new CountDownLatch(T);
 
 		TransactionManager tmanager = new TransactionManager();
-		int processTime = 0;
+
+		long[][] processTime = initializeTiming(new long[N][]);
+		long[] threadTime = new long[] {Long.MAX_VALUE, 0};
 
 		long startProcessing = System.currentTimeMillis();
 
-		long[][] minmaxTime = initializeTiming(new long[N][]);
-
 		for (int i = 0, max = T; i < max; ++i) {
 			new Thread(() -> {
+				long startThread = System.currentTimeMillis();
 				try {
 					for (int j = 0; j < N; ++j) {
 						barrier.await();
 						long[] timing = tmanager.processAsynch(new Transaction(), startProcessing);
-						synchronized( this ) {
+						synchronized( minmaxTimeMonitor ) {
 							// The earliest thread startProcessingTime
-							minmaxTime[j][0] = Math.min(minmaxTime[j][0], timing[0]);
+							processTime[j][0] = Math.min(processTime[j][0], timing[0]);
 							// The oldest thread endProcessingTime
-							minmaxTime[j][1] = Math.max(minmaxTime[j][1], timing[1]);
+							processTime[j][1] = Math.max(processTime[j][1], timing[1]);
 						}
 					}
 				} catch (InterruptedException | BrokenBarrierException e) {
 					e.printStackTrace();
 				} finally {
 					latch.countDown();
+				}
+				long endThread = System.currentTimeMillis();
+				synchronized( threadTimeMonitor ) {
+					// The earliest thread start
+					threadTime[0] = Math.min(threadTime[0], startThread);
+					// The oldest thread end
+					threadTime[1] = Math.max(threadTime[1], endThread);
 				}
 			}).start();
 		}
@@ -57,10 +66,9 @@ public class TestTransactionNotification {
 
 		long endProcessing = System.currentTimeMillis();
 
-		processTime = calculateTiming(minmaxTime);
-
 		System.out.printf("                  Test time = %,d mls\n", endProcessing - startProcessing);
-		System.out.printf("            Processing time = %,d mls\n", processTime);
+		System.out.printf("            Processing time = %,d mls\n", calculateTiming(processTime));
+		System.out.printf("                Thread time = %,d mls\n", threadTime[1]-threadTime[0]);
 		System.out.printf("     Number of transactions = %,d\n", tmanager.transactionCounter);
 		System.out.printf("    Number of notifications = %,d\n", tmanager.notificationCounter);
 		System.out.printf("Number of notified accounts = %,d (%,d)\n", tmanager.notifiedAccounts.size(), Transaction.TOTAL_ACCOUNTS);
@@ -70,6 +78,7 @@ public class TestTransactionNotification {
 
 
 	Object processTimeMonitor = new Object();
+	Object threadTimeMonitor = new Object();
 
 	@Test
 	public void testSingleThreadedImplementation() {
@@ -80,11 +89,13 @@ public class TestTransactionNotification {
 
 		TransactionManager tmanager = new TransactionManager();
 		int[] processTime = new int[] {0};
+		long[] threadTime = new long[] {Long.MAX_VALUE, 0};
 
 		long startProcessing = System.currentTimeMillis();
 
 		for (int i = 0, max = T; i < max; ++i) {
 			new Thread(() -> {
+				long startThread = System.currentTimeMillis();
 				try {
 					for (int j = 0; j < N; ++j) {
 						barrier.await();
@@ -99,6 +110,13 @@ public class TestTransactionNotification {
 				} finally {
 					latch.countDown();
 				}
+				long endThread = System.currentTimeMillis();
+				synchronized( threadTimeMonitor ) {
+					// The earliest thread start
+					threadTime[0] = Math.min(threadTime[0], startThread);
+					// The oldest thread end
+					threadTime[1] = Math.max(threadTime[1], endThread);
+				}
 			}).start();
 		}
 
@@ -112,6 +130,7 @@ public class TestTransactionNotification {
 
 		System.out.printf("                  Test time = %,d mls\n", endProcessing - startProcessing);
 		System.out.printf("            Processing time = %,d mls\n", processTime[0]);
+		System.out.printf("                Thread time = %,d mls\n", threadTime[1]-threadTime[0]);
 		System.out.printf("     Number of transactions = %,d\n", tmanager.transactionCounter);
 		System.out.printf("    Number of notifications = %,d\n", tmanager.notificationCounter);
 		System.out.printf("Number of notified accounts = %,d (%,d)\n", tmanager.notifiedAccounts.size(), Transaction.TOTAL_ACCOUNTS);
