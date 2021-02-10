@@ -14,14 +14,14 @@ public class TransactionManager {
 	public Map<String, NotificationManager> mapSynch = new HashMap<>();
 	public Map<String, NotificationManager> mapAsynch = new ConcurrentHashMap<>();
 	
-	synchronized public long[] processSynch(Transaction transaction, long startProcessing) {
+	synchronized public long[] processSynch(Transaction transaction, long startTest) {
 		long startTransaction = System.currentTimeMillis();
 		++transactionCounter;
 
 		transaction.setExpired(startTransaction); 
 
 		if( getSynchNotificationManager(transaction).isOverLimit(transaction, startTransaction) ) {
-			notify(transaction, startTransaction, startProcessing);
+			notify(transaction, startTransaction, startTest);
 		}
 		
 		long endTransaction = System.currentTimeMillis();
@@ -30,7 +30,7 @@ public class TransactionManager {
 
 	Object transactionCounterMonitor = new Object();
 	
-	public long[] processAsynch(Transaction transaction, long startProcessing) {
+	public long[] processAsynch(Transaction transaction, long startTest) {
 		
 		synchronized ( transactionCounterMonitor ){
 			++transactionCounter;
@@ -41,7 +41,7 @@ public class TransactionManager {
 		transaction.setExpired(startTransaction); 
 
 		if( getAsynchNotificationManager(transaction).isOverLimit(transaction, startTransaction) ) {
-			notify(transaction, startTransaction, startProcessing);
+			notify(transaction, startTransaction, startTest);
 		}
 		
 		long endTransaction = System.currentTimeMillis();
@@ -53,8 +53,8 @@ public class TransactionManager {
 	
 	Object notificationCounterMonitor = new Object();
 
-	private void notify(Transaction transaction, long startTransaction, long startProcessing) {
-		long timeslotNum = (startTransaction - startProcessing)/Transaction.SELECTED_PERIOD_MLS;
+	private void notify(Transaction transaction, long startTransaction, long startTest) {
+		long timeslotNum = (startTransaction - startTest)/Transaction.SELECTED_PERIOD_MLS;
 		String account = transaction.accountNum;
 		String key = account+":"+timeslotNum;
 		if( !notifiedTimeSlots.contains(key) ) {
