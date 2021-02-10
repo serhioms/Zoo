@@ -157,7 +157,7 @@ SINGLE-THRED NOTIFICATIONS with contention of 1,000 threads 1,000 times
   9) time slot= 6 Acc#880 = $10,710 > $10,000 (total 153 - 3 expired)
  36) time slot= 9 Acc#523 = $10,010 > $10,000 (total 143 - 2 expired)
                   Test time = 6,005 mls
-            Processing time = 807 mls
+            Processing time = 807 mls ################################################
                 Thread time = 5,952 mls
      Number of transactions = 1,000,000
     Number of notifications = 58
@@ -167,7 +167,7 @@ MULTI-THREADS NOTIFICATIONS with contention of 1,000 threads 1,000 times
  61) time slot= 7 Acc#784 = $10,080 > $10,000 (total 144 - 3 expired)
  74) time slot= 8 Acc#705 = $10,500 > $10,000 (total 150 - 1 expired)
                   Test time = 5,726 mls
-            Processing time = 5,562 mls
+            Processing time = 5,562 mls ##############################################
                 Thread time = 5,724 mls
      Number of transactions = 1,000,000
     Number of notifications = 116
