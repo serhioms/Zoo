@@ -29,11 +29,11 @@ public class TestTransactionNotification {
 
 		long startTest = System.currentTimeMillis();
 
-		for (int i = 0, max = CONCURRENT_THREADS; i < max; ++i) {
+		for (int i = 0, maxi = CONCURRENT_THREADS; i < maxi; ++i) {
 			new Thread(() -> {
 				long startThread = System.currentTimeMillis();
 				try {
-					for (int j = 0; j < NUMBER_OF_TIMES; ++j) {
+					for (int j = 0, maxj = NUMBER_OF_TIMES; j < maxj; ++j) {
 						barrier.await();
 						long[] timing = tmanager.processSynch(new Transaction(), startTest);
 						long accumulativeTime = timing[1]-timing[0];
@@ -88,11 +88,11 @@ public class TestTransactionNotification {
 
 		long startTest = System.currentTimeMillis();
 
-		for (int i = 0, max = CONCURRENT_THREADS; i < max; ++i) {
+		for (int i = 0, maxi = CONCURRENT_THREADS; i < maxi; ++i) {
 			new Thread(() -> {
 				long startThread = System.currentTimeMillis();
 				try {
-					for (int j = 0; j < NUMBER_OF_TIMES; ++j) {
+					for (int j = 0, maxj = NUMBER_OF_TIMES; j < maxj; ++j) {
 						barrier.await();
 						long[] timing = tmanager.processAsynch(new Transaction(), startTest);
 						synchronized( processTimeMonitor ) {
