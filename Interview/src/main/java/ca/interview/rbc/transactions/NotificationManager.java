@@ -10,25 +10,25 @@ public class NotificationManager {
 	
 	int accSum = 0;
 	
-	synchronized public boolean isOverLimitSequentially(Transaction transaction, long timeline) {
-		return isOverLimit(transaction, timeline);
+	synchronized public boolean isOverLimitSequentially(Transaction transaction, long startTransaction) {
+		return isOverLimit(transaction, startTransaction);
 	}
 
-	public boolean isOverLimit(Transaction transaction, long timeline) {
+	public boolean isOverLimit(Transaction transaction, long startTransaction) {
 
-		// Add new transaction to the tail
-		list.addLast(transaction); 
-		accSum += transaction.transactionSum;
-		
 		// Remove expired transaction from the head
 		while( !list.isEmpty() ) {
-			if( list.getFirst().expiredMls < timeline ) {
+			if( list.getFirst().expiredMls < startTransaction ) {
 				accSum -= list.removeFirst().transactionSum;
 				++transaction.numExpired; // for print
 			} else {
 				break; // transactions are sorted by expire date
 			}
 		}
+
+		// Add new transaction to the tail
+		list.addLast(transaction); 
+		accSum += transaction.transactionSum;
 		
 		return transaction.isOverLimit(accSum, list.size());
 	}

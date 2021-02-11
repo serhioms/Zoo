@@ -5,14 +5,28 @@ import static org.junit.Assert.assertEquals;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
+
+import com.lmax.disruptor.BlockingWaitStrategy;
+import com.lmax.disruptor.EventFactory;
+import com.lmax.disruptor.RingBuffer;
+import com.lmax.disruptor.WorkHandler;
+import com.lmax.disruptor.dsl.Disruptor;
+import com.lmax.disruptor.dsl.ProducerType;
 
 public class TestTransactionNotification {
 
 	final static int CONCURRENT_THREADS = 1000;
 	final static int NUMBER_OF_TIMES = 1000;
 
+	TransactionManager tmanager = new TransactionManager();
+	
+	Object publishTimeMonitor = new Object();
 	Object processTimeMonitor = new Object();
 	Object threadTimeMonitor = new Object();
 
@@ -23,7 +37,6 @@ public class TestTransactionNotification {
 		CyclicBarrier barrier = new CyclicBarrier(CONCURRENT_THREADS);
 		CountDownLatch latch = new CountDownLatch(CONCURRENT_THREADS);
 
-		TransactionManager tmanager = new TransactionManager();
 		int[] processTime = new int[] {0};
 		long[] threadTime = new long[] {Long.MAX_VALUE, 0};
 
@@ -75,12 +88,10 @@ public class TestTransactionNotification {
 
 	@Test
 	public void testConcurrent() {
-		System.out.printf("\nCONCURRENTNOTIFICATIONS with contention of %,d threads %,d times\n", CONCURRENT_THREADS, NUMBER_OF_TIMES);
+		System.out.printf("\nCONCURRENT NOTIFICATIONS with contention of %,d threads %,d times\n", CONCURRENT_THREADS, NUMBER_OF_TIMES);
 
 		CyclicBarrier barrier = new CyclicBarrier(CONCURRENT_THREADS);
 		CountDownLatch latch = new CountDownLatch(CONCURRENT_THREADS);
-
-		TransactionManager tmanager = new TransactionManager();
 
 		int[] processTime = new int[] {0};
 		long[] threadTime = new long[] {Long.MAX_VALUE, 0};
@@ -130,6 +141,115 @@ public class TestTransactionNotification {
 
 		assertEquals(0, CONCURRENT_THREADS * NUMBER_OF_TIMES - tmanager.transactionCounter);
 	}
+
+
+	@Test
+	public void testLmax() throws InterruptedException {
+		System.out.printf("LMax NOTIFICATIONS with contention of %,d threads %,d times\n", CONCURRENT_THREADS, NUMBER_OF_TIMES);
+
+		CyclicBarrier barrier = new CyclicBarrier(CONCURRENT_THREADS);
+		CountDownLatch latch = new CountDownLatch(CONCURRENT_THREADS);
+
+	    ExecutorService executor = Executors.newFixedThreadPool(2);
+
+	    @SuppressWarnings("deprecation")
+		Disruptor<Transaction>  disruptor = new Disruptor<>(new TransactionFactory(), 16384, executor, ProducerType.SINGLE, new BlockingWaitStrategy());
+        
+	    TransactionEventProcessor procs[] = new TransactionEventProcessor[1];
+	    TransactionResultReclaimer result = new TransactionResultReclaimer();
+        for (int i = 0; i < procs.length; i++) {
+            procs[i] = new TransactionEventProcessor();
+        }
+        disruptor.handleEventsWithWorkerPool(procs).thenHandleEventsWithWorkerPool(result);
+
+        disruptor.start();
+		
+	    RingBuffer<Transaction> ringBuffer = disruptor.getRingBuffer();
+		
+		int[] publishTime = new int[] {0};
+		long[] threadTime = new long[] {Long.MAX_VALUE, 0};
+
+		long startTest = System.currentTimeMillis();
+
+		for (int i = 0, maxi = CONCURRENT_THREADS; i < maxi; ++i) {
+			new Thread(() -> {
+				long startThread = System.currentTimeMillis();
+				try {
+					for (int j = 0, maxj = NUMBER_OF_TIMES; j < maxj; ++j) {
+						barrier.await();
+						long[] timing = tmanager.publishLmax(ringBuffer, startTest);
+						synchronized( publishTimeMonitor ) {
+							publishTime[0] += timing[1]-timing[0];;
+						}
+					}
+				} catch (InterruptedException | BrokenBarrierException e) {
+					e.printStackTrace();
+				} finally {
+					latch.countDown();
+				}
+				long endThread = System.currentTimeMillis();
+				synchronized( threadTimeMonitor ) {
+					// The earliest thread start
+					threadTime[0] = Math.min(threadTime[0], startThread);
+					// The oldest thread end
+					threadTime[1] = Math.max(threadTime[1], endThread);
+				}
+			}).start();
+		}
+
+		try {
+			latch.await();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		while( processedCount.get() < tmanager.transactionCounter ) {
+            TimeUnit.MICROSECONDS.sleep(10);
+		}
+
+		disruptor.shutdown();
+		executor.shutdownNow();
+		
+		long endTest = System.currentTimeMillis();
+
+		System.out.printf("                  Test time = %,d mls\n", endTest - startTest);
+		System.out.printf("               Publish time = %,d mls\n", publishTime[0]);
+		System.out.printf("            Processing time = %,d mls\n", processTimeLmax);
+		System.out.printf("                Thread time = %,d mls\n", threadTime[1]-threadTime[0]);
+		System.out.printf("     Number of transactions = %,d\n", tmanager.transactionCounter);
+		System.out.printf("    Number of notifications = %,d\n", tmanager.notificationCounter);
+		System.out.printf("Number of notified accounts = %,d (%,d)\n", tmanager.notifiedAccounts.size(), Transaction.TOTAL_ACCOUNTS);
+
+		assertEquals(0, CONCURRENT_THREADS * NUMBER_OF_TIMES - tmanager.transactionCounter);
+	}
+
+    public class TransactionFactory implements EventFactory<Transaction> {
+        @Override
+        public Transaction newInstance() {
+            return new Transaction();
+        }
+    }
+
+	int processTimeLmax = 0;
+	AtomicInteger processedCount = new AtomicInteger(0);
+
+    public class TransactionEventProcessor implements WorkHandler<Transaction> {
+        @Override
+        synchronized public void onEvent(Transaction transaction) throws Exception {
+        	long start = System.currentTimeMillis();
+        	if( tmanager.getNotificationManager(transaction).isOverLimit(transaction, transaction.startMls) ) {
+        		tmanager.notify(transaction, transaction.startMls, transaction.startTestMls);
+        	}
+        	processTimeLmax += System.currentTimeMillis() - start;
+        }
+    }
+    
+    public class TransactionResultReclaimer implements WorkHandler<Transaction> {
+        @Override
+        public void onEvent(Transaction event) throws Exception {
+        	processedCount.incrementAndGet();
+        }
+    }
 
 }
 /*

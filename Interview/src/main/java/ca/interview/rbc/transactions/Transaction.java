@@ -15,6 +15,10 @@ public class Transaction {
 	public String accountIdent;
 	public int transactionSum; 
 	public long expiredMls;
+
+	// need for disrupter test only
+	public long startMls;
+	public long startTestMls;
 	
 	// Need it for print statistics
 	public int accSum=0, sizeList=0, numExpired=0;
@@ -30,8 +34,15 @@ public class Transaction {
 		 accountIdent = "#"+(100+rand.nextInt(TOTAL_ACCOUNTS));
 	}
 
+	public void setStart(long startMls) {
+		this.startMls = startMls;
+	}
+
+	public void setStartTest(long startTestMls) {
+		this.startTestMls = startTestMls;
+	}
+
 	public void setExpired(long startMls) {
-		// Do not care when transaction starts but care when it's get expired
 		this.expiredMls = startMls+TIME_FRAME_MLS;
 	}
 

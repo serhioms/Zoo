@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.lmax.disruptor.RingBuffer;
+
 public class TransactionManager {
 
 	public int transactionCounter = 0;
@@ -14,6 +16,9 @@ public class TransactionManager {
 	public Map<String, NotificationManager> map = new HashMap<>();
 	public Map<String, NotificationManager> concurrentMap = new ConcurrentHashMap<>();
 	
+	public TransactionManager() {
+	}
+
 	synchronized public long[] processSequentially(Transaction transaction, long startTest) {
 		long startTransaction = System.currentTimeMillis();
 		++transactionCounter;
@@ -55,7 +60,7 @@ public class TransactionManager {
 	
 	Object notificationCounterMonitor = new Object();
 
-	private void notify(Transaction transaction, long startTransaction, long startTest) {
+	public void notify(Transaction transaction, long startTransaction, long startTest) {
 		long timeslotNum = (startTransaction - startTest)/Transaction.TIME_FRAME_MLS;
 		String account = transaction.accountIdent;
 		String key = account+":"+timeslotNum;
@@ -72,7 +77,7 @@ public class TransactionManager {
 		}
 	}
 
-	private NotificationManager getNotificationManager(Transaction transaction) {
+	public NotificationManager getNotificationManager(Transaction transaction) {
 		NotificationManager nman = map.get(transaction.accountIdent);
 		if( nman == null ) {
 			nman = new NotificationManager(); 
@@ -83,7 +88,7 @@ public class TransactionManager {
 
 	Object mapAsynchMonitor = new Object();
 
-	private NotificationManager getNotificationManagerConcurrently(Transaction transaction) {
+	public NotificationManager getNotificationManagerConcurrently(Transaction transaction) {
 		NotificationManager nman = concurrentMap.get(transaction.accountIdent);
 		if( nman == null ) {
 			synchronized(mapAsynchMonitor) {
@@ -95,6 +100,28 @@ public class TransactionManager {
 			}
 		}
 		return nman;
+	}
+
+	
+	synchronized public long[] publishLmax(RingBuffer<Transaction> ringBuffer, long startTest) {
+		
+		synchronized ( transactionCounterMonitor ){
+			++transactionCounter;
+		}
+
+		long startTransaction = System.currentTimeMillis();
+
+		// Publish transaction to disrupter ring buffer
+        long seq = ringBuffer.next();
+        	Transaction transaction = ringBuffer.get(seq);
+        		transaction.startMls = startTransaction; 
+    			transaction.startTestMls = startTest; 
+        		transaction.setExpired(startTransaction); 
+        		transaction.transactionSum = 6; 
+        ringBuffer.publish(seq);
+		
+		long endTransaction = System.currentTimeMillis();
+		return new long[]{startTransaction, endTransaction};
 	}
 
 }
