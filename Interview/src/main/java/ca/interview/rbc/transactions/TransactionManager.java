@@ -103,7 +103,7 @@ public class TransactionManager {
 	}
 
 	
-	synchronized public long[] publishLmax(RingBuffer<Transaction> ringBuffer, long startTest) {
+	synchronized public long[] publishLmaxSynch(RingBuffer<Transaction> ringBuffer, long startTest) {
 		
 		synchronized ( transactionCounterMonitor ){
 			++transactionCounter;

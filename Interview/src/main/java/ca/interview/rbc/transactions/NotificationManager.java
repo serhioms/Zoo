@@ -17,15 +17,21 @@ public class NotificationManager {
 	public boolean isOverLimit(Transaction transaction, long startTransaction) {
 
 		// Remove expired transaction from the head
-		while( !list.isEmpty() ) {
-			if( list.getFirst().expiredMls < startTransaction ) {
-				accSum -= list.removeFirst().transactionSum;
-				++transaction.numExpired; // for print
-			} else {
-				break; // transactions are sorted by expire date
+		if( list.size() == 0 ) {
+		} else if( list.getLast().expiredMls < startTransaction ) {
+			list.clear();
+			accSum = 0;
+		} else {
+			while( !list.isEmpty() ) {
+				if( list.getFirst().expiredMls < startTransaction ) {
+					accSum -= list.removeFirst().transactionSum;
+					++transaction.numExpired; // for print
+				} else {
+					break; // transactions are sorted by expire date
+				}
 			}
 		}
-
+		
 		// Add new transaction to the tail
 		list.addLast(transaction); 
 		accSum += transaction.transactionSum;
