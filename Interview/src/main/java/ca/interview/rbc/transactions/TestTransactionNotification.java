@@ -131,41 +131,34 @@ public class TestTransactionNotification {
 		assertEquals(0, CONCURRENT_THREADS * NUMBER_OF_TIMES - tmanager.transactionCounter);
 	}
 
-	private int calculate(long[][] timing) {
-		int processTime = 0;
-		for(int i=0,max=timing.length; i<max; ++i) {
-			processTime += (timing[i][1]-timing[i][0]);
-		}
-		return processTime;
-	}
-
-	private long[][] initialize(long[][] timing) {
-		for(int i=0,max=timing.length; i<max; ++i) {
-			timing[i] = new long[] {Long.MAX_VALUE,0};
-		}
-		return timing;
-	}
-
 }
 /*
 
-SINGLE-THRED NOTIFICATIONS with contention of 1,000 threads 1,000 times
-  9) time slot= 6 Acc#880 = $10,710 > $10,000 (total 153 - 3 expired)
- 36) time slot= 9 Acc#523 = $10,010 > $10,000 (total 143 - 2 expired)
-                  Test time = 6,005 mls
-            Processing time = 807 mls ################################################
-                Thread time = 5,952 mls
-     Number of transactions = 1,000,000
-    Number of notifications = 58
-Number of notified accounts = 48 (831)
 
-MULTI-THREADS NOTIFICATIONS with contention of 1,000 threads 1,000 times
- 61) time slot= 7 Acc#784 = $10,080 > $10,000 (total 144 - 3 expired)
- 74) time slot= 8 Acc#705 = $10,500 > $10,000 (total 150 - 1 expired)
-                  Test time = 5,726 mls
-            Processing time = 5,562 mls ##############################################
-                Thread time = 5,724 mls
+SEQUENTIAL NOTIFICATIONS with contention of 1,000 threads 1,000 times
+  3) time slot= 6 Acc#880 = $10,010 > $10,000 (total 143 - 2 expired)
+ 11) time slot= 8 Acc#389 = $10,080 > $10,000 (total 144 - 1 expired)
+                  Test time = 6,425 mls
+            Processing time = 890 mls ####################### faster
+                Thread time = 6,374 mls
      Number of transactions = 1,000,000
-    Number of notifications = 116
-Number of notified accounts = 100 (831)
+    Number of notifications = 11
+Number of notified accounts = 9 (831)
+
+CONCURRENTNOTIFICATIONS with contention of 1,000 threads 1,000 times
+  8) time slot= 4 Acc#537 = $10,010 > $10,000 (total 143 - 3 expired)
+ 30) time slot= 5 Acc#765 = $10,220 > $10,000 (total 146 - 2 expired)
+ 43) time slot= 6 Acc#758 = $10,150 > $10,000 (total 145 - 3 expired)
+ 65) time slot= 7 Acc#157 = $10,080 > $10,000 (total 144 - 1 expired)
+ 67) time slot= 7 Acc#632 = $10,570 > $10,000 (total 151 - 1 expired)
+ 69) time slot= 7 Acc#784 = $10,360 > $10,000 (total 148 - 5 expired)
+115) time slot= 9 Acc#684 = $10,010 > $10,000 (total 143 - 1 expired)
+118) time slot= 9 Acc#640 = $10,080 > $10,000 (total 144 - 1 expired)
+                  Test time = 5,715 mls
+            Processing time = 1,679 mls #################### slower
+                Thread time = 5,714 mls
+     Number of transactions = 1,000,000
+    Number of notifications = 155
+Number of notified accounts = 113 (831)
+
 */
