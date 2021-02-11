@@ -17,8 +17,8 @@ public class TestTransactionNotification {
 	Object threadTimeMonitor = new Object();
 
 	@Test
-	public void testSingleThreadedImplementation() {
-		System.out.printf("\nSINGLE-THRED NOTIFICATIONS with contention of %,d threads %,d times\n", CONCURRENT_THREADS, NUMBER_OF_TIMES);
+	public void testSequential() {
+		System.out.printf("\nSEQUENTIAL NOTIFICATIONS with contention of %,d threads %,d times\n", CONCURRENT_THREADS, NUMBER_OF_TIMES);
 
 		CyclicBarrier barrier = new CyclicBarrier(CONCURRENT_THREADS);
 		CountDownLatch latch = new CountDownLatch(CONCURRENT_THREADS);
@@ -35,10 +35,9 @@ public class TestTransactionNotification {
 				try {
 					for (int j = 0, maxj = NUMBER_OF_TIMES; j < maxj; ++j) {
 						barrier.await();
-						long[] timing = tmanager.processSynch(new Transaction(), startTest);
-						long accumulativeTime = timing[1]-timing[0];
+						long[] timing = tmanager.processSequentially(new Transaction(), startTest);
 						synchronized( processTimeMonitor ) {
-							processTime[0] += accumulativeTime;
+							processTime[0] += timing[1]-timing[0];;
 						}
 					}
 				} catch (InterruptedException | BrokenBarrierException e) {
@@ -75,15 +74,15 @@ public class TestTransactionNotification {
 	}
 
 	@Test
-	public void testMultithreadedImplementation() {
-		System.out.printf("\nMULTI-THREADS NOTIFICATIONS with contention of %,d threads %,d times\n", CONCURRENT_THREADS, NUMBER_OF_TIMES);
+	public void testConcurrent() {
+		System.out.printf("\nCONCURRENTNOTIFICATIONS with contention of %,d threads %,d times\n", CONCURRENT_THREADS, NUMBER_OF_TIMES);
 
 		CyclicBarrier barrier = new CyclicBarrier(CONCURRENT_THREADS);
 		CountDownLatch latch = new CountDownLatch(CONCURRENT_THREADS);
 
 		TransactionManager tmanager = new TransactionManager();
 
-		long[][] processTime = initialize(new long[NUMBER_OF_TIMES][]);
+		int[] processTime = new int[] {0};
 		long[] threadTime = new long[] {Long.MAX_VALUE, 0};
 
 		long startTest = System.currentTimeMillis();
@@ -94,12 +93,9 @@ public class TestTransactionNotification {
 				try {
 					for (int j = 0, maxj = NUMBER_OF_TIMES; j < maxj; ++j) {
 						barrier.await();
-						long[] timing = tmanager.processAsynch(new Transaction(), startTest);
+						long[] timing = tmanager.processConcurrently(new Transaction(), startTest);
 						synchronized( processTimeMonitor ) {
-							// The earliest thread startProcessingTime
-							processTime[j][0] = Math.min(processTime[j][0], timing[0]);
-							// The oldest thread endProcessingTime
-							processTime[j][1] = Math.max(processTime[j][1], timing[1]);
+							processTime[0] += timing[1] - timing[0];
 						}
 					}
 				} catch (InterruptedException | BrokenBarrierException e) {
@@ -126,7 +122,7 @@ public class TestTransactionNotification {
 		long endTest = System.currentTimeMillis();
 
 		System.out.printf("                  Test time = %,d mls\n", endTest - startTest);
-		System.out.printf("            Processing time = %,d mls\n", calculate(processTime));
+		System.out.printf("            Processing time = %,d mls\n", processTime[0]);
 		System.out.printf("                Thread time = %,d mls\n", threadTime[1]-threadTime[0]);
 		System.out.printf("     Number of transactions = %,d\n", tmanager.transactionCounter);
 		System.out.printf("    Number of notifications = %,d\n", tmanager.notificationCounter);

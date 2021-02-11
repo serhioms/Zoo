@@ -5,40 +5,40 @@ import java.util.Random;
 public class Transaction {
 
 	public static final int SUM_LIMIT = 10000;
-	public static final int SUM_TIME_FRAME_MLS = 500;
+	public static final int TIME_FRAME_MLS = 500;
 
 	public static final int TRANSACTION_SUM = 70;
 	public static final int TOTAL_ACCOUNTS = 831;
 
 	public static final Random rand = new Random(1010101);
 
-	public String accountNum;
-	public int sum; 
-	public long expired;
+	public String accountIdent;
+	public int transactionSum; 
+	public long expiredMls;
 	
 	// Need it for print statistics
-	public int accsum=0, acclistsize=0, accremexp=0;
+	public int accSum=0, sizeList=0, numExpired=0;
 
 	public Transaction() {
-		// constant transaction sum
-		sum = Transaction.TRANSACTION_SUM;
+		// transaction sum is constant
+		transactionSum = Transaction.TRANSACTION_SUM;
 		
-		// There is no much difference in simulation if do sum slightly random
+		// There is no much difference in simulation of sum slightly random
 		// sum += rand.nextBoolean()? rand.nextInt(5): -rand.nextInt(5);
 
 		// random accounts from #100 to #930
-		 accountNum = "#"+(100+rand.nextInt(TOTAL_ACCOUNTS));
+		 accountIdent = "#"+(100+rand.nextInt(TOTAL_ACCOUNTS));
 	}
 
-	public void setExpired(long start) {
-		// We do not care about when transaction starts but care when it get expire
-		this.expired = start+SUM_TIME_FRAME_MLS;
+	public void setExpired(long startMls) {
+		// Do not care when transaction starts but care when it's get expired
+		this.expiredMls = startMls+TIME_FRAME_MLS;
 	}
 
-	public boolean isOverLimit(int accsum, int acclistsize) {
-		this.accsum = accsum;
-		this.acclistsize = acclistsize;
-		return accsum > SUM_LIMIT;
+	public boolean isOverLimit(int accSum, int sizeList) {
+		this.accSum = accSum;
+		this.sizeList = sizeList;
+		return accSum > SUM_LIMIT;
 	}
 	
 }
