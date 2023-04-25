@@ -55,28 +55,6 @@ public class TransactionManager {
 		return new long[]{startTransaction, endTransaction};
 	}
 
-	public Set<String> notifiedAccounts = new HashSet<>(Transaction.TOTAL_ACCOUNTS);
-	public Set<String> notifiedTimeSlots = new HashSet<>(Transaction.TOTAL_ACCOUNTS*10);
-	
-	Object notificationCounterMonitor = new Object();
-
-	public void notify(Transaction transaction, long startTransaction, long startTest) {
-		long timeslotNum = (startTransaction - startTest)/Transaction.TIME_FRAME_MLS;
-		String account = transaction.accountIdent;
-		String key = account+":"+timeslotNum;
-		if( !notifiedTimeSlots.contains(key) ) {
-			synchronized( notificationCounterMonitor ) {
-				++notificationCounter;
-				notifiedAccounts.add(transaction.accountIdent);
-				notifiedTimeSlots.add(key);
-			}
-			// Do not print all notifications but only most interesting which include expired transactions
-			if( transaction.numExpired > 0 ) {
-				System.out.printf("%3s) time slot=%2d Acc%3s = $%,d > $%,d (total %d - %d expired)\n", notificationCounter+"", timeslotNum, account, transaction.accSum, Transaction.SUM_LIMIT, transaction.sizeList, transaction.numExpired);
-			}
-		}
-	}
-
 	public NotificationManager getNotificationManager(Transaction transaction) {
 		NotificationManager nman = map.get(transaction.accountIdent);
 		if( nman == null ) {
@@ -104,12 +82,11 @@ public class TransactionManager {
 
 	
 	synchronized public long[] publishLmaxSynch(RingBuffer<Transaction> ringBuffer, long startTest) {
+		long startTransaction = System.currentTimeMillis();
 		
 		synchronized ( transactionCounterMonitor ){
 			++transactionCounter;
 		}
-
-		long startTransaction = System.currentTimeMillis();
 
 		// Publish transaction to disrupter ring buffer
         long seq = ringBuffer.next();
@@ -124,4 +101,26 @@ public class TransactionManager {
 		return new long[]{startTransaction, endTransaction};
 	}
 
+
+	public Set<String> notifiedAccounts = new HashSet<>(Transaction.TOTAL_ACCOUNTS);
+	public Set<String> notifiedTimeSlots = new HashSet<>(Transaction.TOTAL_ACCOUNTS*10);
+	
+	Object notificationCounterMonitor = new Object();
+
+	public void notify(Transaction transaction, long startTransaction, long startTest) {
+		long timeslotNum = (startTransaction - startTest)/Transaction.TIME_FRAME_MLS;
+		String account = transaction.accountIdent;
+		String key = account+":"+timeslotNum;
+		if( !notifiedTimeSlots.contains(key) ) {
+			synchronized( notificationCounterMonitor ) {
+				++notificationCounter;
+				notifiedAccounts.add(transaction.accountIdent);
+				notifiedTimeSlots.add(key);
+			}
+			// Do not print all notifications but only most interesting which include expired transactions
+			if( transaction.numExpired > 0 ) {
+				//System.out.printf("%3s) time slot=%2d Acc%3s = $%,d > $%,d (total %d - %d expired)\n", notificationCounter+"", timeslotNum, account, transaction.accSum, Transaction.SUM_LIMIT, transaction.sizeList, transaction.numExpired);
+			}
+		}
+	}
 }

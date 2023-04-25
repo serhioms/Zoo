@@ -19,7 +19,6 @@ public class NotificationManager {
 		// Remove expired transaction from the head
 		if( list.size() == 0 ) {
 		} else if( list.getLast().expiredMls < startTransaction ) {
-			transaction.numExpired += list.size(); // for print
 			list.clear();
 			accSum = 0;
 		} else {
@@ -40,4 +39,5 @@ public class NotificationManager {
 		return transaction.isOverLimit(accSum, list.size());
 	}
 
+	
 }

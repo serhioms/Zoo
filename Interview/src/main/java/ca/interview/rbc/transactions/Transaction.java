@@ -4,6 +4,8 @@ import java.util.Random;
 
 public class Transaction {
 
+	public static final boolean SINGLETON = false;
+
 	public static final int SUM_LIMIT = 10000;
 	public static final int TIME_FRAME_MLS = 500;
 
@@ -23,7 +25,7 @@ public class Transaction {
 	// Need it for print statistics
 	public int accSum=0, sizeList=0, numExpired=0;
 
-	public Transaction() {
+	private Transaction() {
 		// transaction sum is constant
 		transactionSum = Transaction.TRANSACTION_SUM;
 		
@@ -51,5 +53,10 @@ public class Transaction {
 		this.sizeList = sizeList;
 		return accSum > SUM_LIMIT;
 	}
-	
+
+	final static Transaction singleton = new Transaction();
+
+	public static Transaction getTransaction() {
+		return SINGLETON? singleton: new Transaction();
+	}
 }

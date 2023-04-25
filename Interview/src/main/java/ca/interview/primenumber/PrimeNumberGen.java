@@ -20,12 +20,15 @@ public class PrimeNumberGen {
 	}
 
 	boolean isPrime(int n) {
-		if( n<2 ) return false;
-		
-		int q = (int )Math.floor(Math.sqrt((double )n));
-		for(int i=2; i<=q; i++) {
-			if( n % i == 0 ) {
+		if( n > 2 ) {
+			if( (n & 1) == 0 ){
 				return false;
+			}
+			int q = (int) Math.floor(Math.sqrt((double) n));
+			for (int i=3; i <= q; i+=2) {
+				if (n % i == 0) {
+					return false;
+				}
 			}
 		}
 		return true;

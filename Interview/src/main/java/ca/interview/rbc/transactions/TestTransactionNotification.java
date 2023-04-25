@@ -20,13 +20,14 @@ import com.lmax.disruptor.dsl.ProducerType;
 
 public class TestTransactionNotification {
 
-	final static int CONCURRENT_THREADS = 1000;
-	final static int NUMBER_OF_TIMES = 1000;
+	final static int CONCURRENT_THREADS = 10000;
+	final static int NUMBER_OF_TIMES = 100000;
 
-	final static int PROCESSING_THREADS = 4;
+	final static int PROCESSING_THREADS = 8;
 
 	TransactionManager tmanager = new TransactionManager();
 	
+	Object barrierTimeMonitor = new Object();
 	Object publishTimeMonitor = new Object();
 	Object processTimeMonitor = new Object();
 	Object threadTimeMonitor = new Object();
@@ -42,19 +43,30 @@ public class TestTransactionNotification {
 			CountDownLatch latch = new CountDownLatch(CONCURRENT_THREADS);
 	
 			int[] processTime = new int[] {0};
-			long[] threadTime = new long[] {Long.MAX_VALUE, 0};
+			long[] threadTime = new long[] {0, Long.MAX_VALUE, 0};
+			long[] barrierTime = new long[] {0, Long.MAX_VALUE, 0};
 	
 			long startTest = System.currentTimeMillis();
 	
 			for (int i = 0, maxi = CONCURRENT_THREADS; i < maxi; ++i) {
 				new Thread(() -> {
-					long startThread = System.currentTimeMillis();
+					long threadDuration = System.currentTimeMillis();
 					try {
-						for (int j = 0, maxj = NUMBER_OF_TIMES; j < maxj; ++j) {
+						long barrierWait=0;
+						if( CONCURRENT_THREADS > 1 ) {
+							barrierWait = System.currentTimeMillis();
 							barrier.await();
-							long[] timing = tmanager.processSequentially(new Transaction(), startTest);
+							barrierWait = System.currentTimeMillis() - barrierWait;
+							synchronized( barrierTimeMonitor ) {
+								barrierTime[0] += barrierWait;
+								barrierTime[1] = Math.min(barrierTime[1] , barrierWait);
+								barrierTime[2] = Math.max(barrierTime[2] , barrierWait);
+							}
+						}
+						for (int j = 0, maxj = NUMBER_OF_TIMES; j < maxj; ++j) {
+							long[] timing = tmanager.processSequentially(Transaction.getTransaction(), startTest);
 							synchronized( processTimeMonitor ) {
-								processTime[0] += timing[1]-timing[0];;
+								processTime[0] += timing[1]-timing[0];
 							}
 						}
 					} catch (InterruptedException | BrokenBarrierException e) {
@@ -62,12 +74,11 @@ public class TestTransactionNotification {
 					} finally {
 						latch.countDown();
 					}
-					long endThread = System.currentTimeMillis();
+					threadDuration = System.currentTimeMillis() - threadDuration;
 					synchronized( threadTimeMonitor ) {
-						// The earliest thread start
-						threadTime[0] = Math.min(threadTime[0], startThread);
-						// The oldest thread end
-						threadTime[1] = Math.max(threadTime[1], endThread);
+						threadTime[0] += threadDuration;
+						threadTime[1] = Math.min(threadTime[1] , threadDuration);
+						threadTime[2] = Math.max(threadTime[2] , threadDuration);
 					}
 				}).start();
 			}
@@ -81,8 +92,9 @@ public class TestTransactionNotification {
 			long endTest = System.currentTimeMillis();
 	
 			System.out.printf("                  Test time = %,d mls\n", endTest - startTest);
-			System.out.printf("            Processing time = %,d mls\n", processTime[0]);
-			System.out.printf("                Thread time = %,d mls\n", threadTime[1]-threadTime[0]);
+			System.out.printf("                Thread time = %,d mls avg [%,d to %,d mls]\n", threadTime[0]/CONCURRENT_THREADS, threadTime[1], threadTime[2]);
+			System.out.printf("               Barrier time = %,d mls avg [%,d to %,d mls]\n", barrierTime[0]/CONCURRENT_THREADS, barrierTime[1], barrierTime[2]);
+			System.out.printf("            Processing time = %,d mls/%,d\n", processTime[0], tmanager.transactionCounter);
 			System.out.printf("     Number of transactions = %,d\n", tmanager.transactionCounter);
 			System.out.printf("    Number of notifications = %,d\n", tmanager.notificationCounter);
 			System.out.printf("Number of notified accounts = %,d (%,d)\n", tmanager.notifiedAccounts.size(), Transaction.TOTAL_ACCOUNTS);
@@ -102,17 +114,28 @@ public class TestTransactionNotification {
 			CountDownLatch latch = new CountDownLatch(CONCURRENT_THREADS);
 	
 			int[] processTime = new int[] {0};
-			long[] threadTime = new long[] {Long.MAX_VALUE, 0};
+			long[] threadTime = new long[] {0, Long.MAX_VALUE, 0};
+			long[] barrierTime = new long[] {0, Long.MAX_VALUE, 0};
 	
 			long startTest = System.currentTimeMillis();
 	
 			for (int i = 0, maxi = CONCURRENT_THREADS; i < maxi; ++i) {
 				new Thread(() -> {
-					long startThread = System.currentTimeMillis();
+					long threadDuration = System.currentTimeMillis();
 					try {
-						for (int j = 0, maxj = NUMBER_OF_TIMES; j < maxj; ++j) {
+						long barrierWait=0;
+						if( CONCURRENT_THREADS > 1 ) {
+							barrierWait = System.currentTimeMillis();
 							barrier.await();
-							long[] timing = tmanager.processConcurrently(new Transaction(), startTest);
+							barrierWait = System.currentTimeMillis() - barrierWait;
+							synchronized( barrierTimeMonitor ) {
+								barrierTime[0] += barrierWait;
+								barrierTime[1] = Math.min(barrierTime[1] , barrierWait);
+								barrierTime[2] = Math.max(barrierTime[2] , barrierWait);
+							}
+						}
+						for (int j = 0, maxj = NUMBER_OF_TIMES; j < maxj; ++j) {
+							long[] timing = tmanager.processConcurrently(Transaction.getTransaction(), startTest);
 							synchronized( processTimeMonitor ) {
 								processTime[0] += timing[1] - timing[0];
 							}
@@ -122,12 +145,11 @@ public class TestTransactionNotification {
 					} finally {
 						latch.countDown();
 					}
-					long endThread = System.currentTimeMillis();
+					threadDuration = System.currentTimeMillis() - threadDuration;
 					synchronized( threadTimeMonitor ) {
-						// The earliest thread start
-						threadTime[0] = Math.min(threadTime[0], startThread);
-						// The oldest thread end
-						threadTime[1] = Math.max(threadTime[1], endThread);
+						threadTime[0] += threadDuration;
+						threadTime[1] = Math.min(threadTime[1] , threadDuration);
+						threadTime[2] = Math.max(threadTime[2] , threadDuration);
 					}
 				}).start();
 			}
@@ -141,8 +163,9 @@ public class TestTransactionNotification {
 			long endTest = System.currentTimeMillis();
 	
 			System.out.printf("                  Test time = %,d mls\n", endTest - startTest);
-			System.out.printf("            Processing time = %,d mls\n", processTime[0]);
-			System.out.printf("                Thread time = %,d mls\n", threadTime[1]-threadTime[0]);
+			System.out.printf("                Thread time = %,d mls avg [%,d to %,d mls]\n", threadTime[0]/CONCURRENT_THREADS, threadTime[1], threadTime[2]);
+			System.out.printf("               Barrier time = %,d mls avg [%,d to %,d mls]\n", barrierTime[0]/CONCURRENT_THREADS, barrierTime[1], barrierTime[2]);
+			System.out.printf("            Processing time = %,d mls/%,d\n", processTime[0], tmanager.transactionCounter);
 			System.out.printf("     Number of transactions = %,d\n", tmanager.transactionCounter);
 			System.out.printf("    Number of notifications = %,d\n", tmanager.notificationCounter);
 			System.out.printf("Number of notified accounts = %,d (%,d)\n", tmanager.notifiedAccounts.size(), Transaction.TOTAL_ACCOUNTS);
@@ -179,20 +202,31 @@ public class TestTransactionNotification {
 			
 		    RingBuffer<Transaction> ringBuffer = disruptor.getRingBuffer();
 			
-			int[] publishTime = new int[] {0};
-			long[] threadTime = new long[] {Long.MAX_VALUE, 0};
+			long[] publishTime = new long[] {0};
+			long[] threadTime = new long[] {0, Long.MAX_VALUE, 0};
+			long[] barrierTime = new long[] {0, Long.MAX_VALUE, 0};
 	
 			long startTest = System.currentTimeMillis();
 	
-			for (int i = 0, maxi = CONCURRENT_THREADS; i < maxi; ++i) {
+			for (int i = 0, maxi=CONCURRENT_THREADS; i < maxi; ++i) {
 				new Thread(() -> {
-					long startThread = System.currentTimeMillis();
+					long threadDuration = System.currentTimeMillis();
 					try {
-						for (int j = 0, maxj = NUMBER_OF_TIMES; j < maxj; ++j) {
+						long barrierWait=0;
+						if( CONCURRENT_THREADS > 1 ) {
+							barrierWait = System.currentTimeMillis();
 							barrier.await();
+							barrierWait = System.currentTimeMillis() - barrierWait;
+							synchronized( barrierTimeMonitor ) {
+								barrierTime[0] += barrierWait;
+								barrierTime[1] = Math.min(barrierTime[1] , barrierWait);
+								barrierTime[2] = Math.max(barrierTime[2] , barrierWait);
+							}
+						}
+						for (int j = 0, maxj = NUMBER_OF_TIMES; j < maxj; ++j) {
 							long[] timing = tmanager.publishLmaxSynch(ringBuffer, startTest);
 							synchronized( publishTimeMonitor ) {
-								publishTime[0] += timing[1]-timing[0];;
+								publishTime[0] += timing[1]-timing[0];
 							}
 						}
 					} catch (InterruptedException | BrokenBarrierException e) {
@@ -200,12 +234,11 @@ public class TestTransactionNotification {
 					} finally {
 						latch.countDown();
 					}
-					long endThread = System.currentTimeMillis();
+					threadDuration = System.currentTimeMillis() - threadDuration;
 					synchronized( threadTimeMonitor ) {
-						// The earliest thread start
-						threadTime[0] = Math.min(threadTime[0], startThread);
-						// The oldest thread end
-						threadTime[1] = Math.max(threadTime[1], endThread);
+						threadTime[0] += threadDuration;
+						threadTime[1] = Math.min(threadTime[1] , threadDuration);
+						threadTime[2] = Math.max(threadTime[2] , threadDuration);
 					}
 				}).start();
 			}
@@ -226,9 +259,10 @@ public class TestTransactionNotification {
 			long endTest = System.currentTimeMillis();
 	
 			System.out.printf("                  Test time = %,d mls\n", endTest - startTest);
-			System.out.printf("               Publish time = %,d mls\n", publishTime[0]);
-			System.out.printf("            Processing time = %,d mls\n", processTimeLmax);
-			System.out.printf("                Thread time = %,d mls\n", threadTime[1]-threadTime[0]);
+			System.out.printf("                Thread time = %,d mls avg [%,d to %,d mls]\n", threadTime[0]/CONCURRENT_THREADS, threadTime[1], threadTime[2]);
+			System.out.printf("               Barrier time = %,d mls avg [%,d to %,d mls]\n", barrierTime[0]/CONCURRENT_THREADS, barrierTime[1], barrierTime[2]);
+			System.out.printf("               Publish time = %,d mls/%,d\n", publishTime[0], tmanager.transactionCounter);
+			System.out.printf("            Processing time = %,d mls/%,d\n", processTimeLmax, tmanager.transactionCounter);
 			System.out.printf("     Number of transactions = %,d\n", tmanager.transactionCounter);
 			System.out.printf("    Number of notifications = %,d\n", tmanager.notificationCounter);
 			System.out.printf("Number of notified accounts = %,d (%,d)\n", tmanager.notifiedAccounts.size(), Transaction.TOTAL_ACCOUNTS);
@@ -240,29 +274,33 @@ public class TestTransactionNotification {
     public class TransactionFactory implements EventFactory<Transaction> {
         @Override
         public Transaction newInstance() {
-            return new Transaction();
+            return Transaction.getTransaction();
         }
     }
 
+	Object processTimeLmaxMonitor = new Object();
+
 	int processTimeLmax = 0;
 	int processedCount = 0;
-	boolean singleThreadProcessing = (PROCESSING_THREADS == 1);
+	
+	final boolean singleThreadProcessing = (PROCESSING_THREADS == 1);
 
     public class TransactionEventProcessor implements WorkHandler<Transaction> {
         @Override
         public void onEvent(Transaction transaction) throws Exception {
+        	long start = System.currentTimeMillis();
         	if( singleThreadProcessing ) {
-            	long start = System.currentTimeMillis();
             	if( tmanager.getNotificationManager(transaction).isOverLimit(transaction, transaction.startMls) ) {
             		tmanager.notify(transaction, transaction.startMls, transaction.startTestMls);
             	}
             	processTimeLmax += System.currentTimeMillis() - start;
         	} else {
-            	long start = System.currentTimeMillis();
             	if( tmanager.getNotificationManagerConcurrently(transaction).isOverLimitSequentially(transaction, transaction.startMls) ) {
             		tmanager.notify(transaction, transaction.startMls, transaction.startTestMls);
             	}
-            	processTimeLmax += System.currentTimeMillis() - start;
+            	synchronized( processTimeLmaxMonitor ) {
+            		processTimeLmax += System.currentTimeMillis() - start;
+            	}
         	}
         }
     }

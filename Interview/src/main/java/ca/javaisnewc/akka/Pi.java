@@ -12,7 +12,7 @@ import akka.actor.UntypedActorFactory;
 import akka.routing.RoundRobinRouter;
 
 public class Pi {
-	 
+/*	 
     static volatile CountDownLatch latch;
     static long timSum = 0;
  
@@ -219,4 +219,5 @@ public class Pi {
         master.tell(new Calculate(), master);
  
     }
+*/    
 }
