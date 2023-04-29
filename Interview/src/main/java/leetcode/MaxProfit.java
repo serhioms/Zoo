@@ -49,6 +49,46 @@ public class MaxProfit {
         return maxProfit;
     }
 
+    public int maxProfit7My(int[] prices) {
+        int a = 0;
+        int b = prices.length - 1;
+        int mina = prices[a];
+        int maxa = prices[a];
+        int maxb = prices[b];
+        int minb = prices[b];
+        int maxProfit = prices[b] - prices[a];
+        while (++a <= --b) {
+            if( prices[a] > maxa ){
+                maxa = prices[a];
+            }
+            if( prices[b] < minb ){
+                minb = prices[b];
+            }
+            if (prices[a] < mina) {
+                if( maxa-mina > maxProfit ){
+                    maxProfit = maxa - mina;
+                }
+                mina = maxa = prices[a];
+            }
+            if (prices[b] > maxb) {
+                if( maxb - minb > maxProfit ){
+                    maxProfit = maxb - minb;
+                }
+                maxb = minb = prices[b];
+            }
+            if( maxb - mina > maxProfit ){
+                maxProfit = maxb - mina;
+            }
+        }
+        if( maxa-mina > maxProfit ){
+            maxProfit = maxa - mina;
+        }
+        if( maxb - minb > maxProfit ){
+            maxProfit = maxb - minb;
+        }
+        return maxProfit;
+    }
+
     public int maxProfit0(int[] prices) {
         /* // TODO: VOT SUKA!!!
         if (prices.length > 100) {
@@ -172,6 +212,7 @@ public class MaxProfit {
         assertEquals(5, maxProfit4(A));
         assertEquals(5, maxProfit5(A));
         assertEquals(5, maxProfit6(A));
+        assertEquals(5, maxProfit7My(A));
     }
 
     @Test
@@ -184,7 +225,8 @@ public class MaxProfit {
         assertEquals(4, maxProfit3My(B));
         assertEquals(4, maxProfit4(B));
         assertEquals(4, maxProfit5(B));
-        assertEquals(4, maxProfit5(B));
+        assertEquals(4, maxProfit6(B));
+        assertEquals(4, maxProfit7My(B));
     }
 
     @Test
@@ -223,14 +265,19 @@ public class MaxProfit {
         assertEquals(999, maxProfit6(C));
         long end6 = System.nanoTime();
 
-        System.out.printf("   My brut, nano = %,d\n", end - start);
+        long start7 = System.nanoTime();
+        assertEquals(999, maxProfit7My(C));
+        long end7 = System.nanoTime();
+
+        System.out.printf("    My brut, nano = %,d\n", end - start);
         System.out.printf("       My 3, nano = %,d\n", end3 - start3);
         System.out.printf("   Genius 2, nano = %,d no Math.min/max !\n", end2 - start2);
         System.out.printf("  Genius 14, nano = %,d\n", end1 - start1);
-        System.out.printf("'Genius 0', nano = %,d\n", end0 - start0);
-        System.out.printf("  Genius 41, nano = %,d no Math.min/max !!!\n", end4 - start4);
+        System.out.printf(" 'Genius 0', nano = %,d\n", end0 - start0);
+        System.out.printf("  Genius 41, nano = %,d no Math.min/max !!!!\n", end4 - start4);
         System.out.printf("   Genius 5, nano = %,d no Math.min/max\n", end5 - start5);
         System.out.printf("   Genius 6, nano = %,d no Math.min/max !!\n", end6 - start6);
+        System.out.printf("       My 7, nano = %,d no Math.min/max !!!\n", end7 - start7);
     }
 
     private int[] readIntArray(String filePath) throws Exception {
