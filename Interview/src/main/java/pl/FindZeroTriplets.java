@@ -4,10 +4,11 @@ package pl;
  * Click `Run` to execute the snippet below!
  */
 
-import java.io.*;
 import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
 import org.junit.*;
-import org.junit.runner.*;
 
 /*
  * Given an array nums of n integers, are there elements a, b, c in nums such
@@ -26,106 +27,50 @@ import org.junit.runner.*;
 
 public class FindZeroTriplets {
 
-    private static List<List<Integer>> threeSum(int[] nums) {
-        List<List<Integer>> result = new ArrayList<>(1012);
-
-        for(int i=0,sizei=nums.length-2; i<sizei; ++i)
-
-        for(int j=i+1,sizej=sizei+1; j<sizej; ++j)
-            for(int k=j+1,sizek=sizej+1; k<sizek; ++k){
-                if( checkIsDumNul(nums[i], nums[j], nums[k]) ){
-                    List<Integer> r = new ArrayList<>(3);
-                    r.add(nums[i]);
-                    r.add(nums[j]);
-                    r.add(nums[k]);
-                    if( isUnique(result, r) ){
-                        result.add(r);
+    public List<List<Integer>> threeSum(int[] nums) {
+        int count = 0;
+        Map<String, List<Integer>> map = new HashMap<>(1024);
+        Set<Integer> set = new HashSet<>(1024);
+        for(int i=0,max=nums.length; i<max; ++i) {
+            for (int j = i + 1; j < max; ++j) {
+                // no need looking for the same pair as before = for the same sum as before!
+                if( set.contains(nums[i] + nums[j]) ){
+                    continue;
+                }
+                set.add(nums[i] + nums[j]);
+                for (int k = j + 1; k < max; ++k) {
+                    if ( nums[i] + nums[j] + nums[k] == 0) {
+                        List<Integer> collection = new ArrayList<>(3);
+                        collection.add(nums[i]);
+                        collection.add(nums[j]);
+                        collection.add(nums[k]);
+                        Collections.sort(collection);
+                        map.put(collection.toString(), collection);
+                        ++count;
+                        break; // No need looking for the next same value for the 3rd number
                     }
                 }
             }
-
-        System.out.println(result);
-        System.out.println("....");
-        return result;
-    }
-
-    private static boolean checkIsDumNul(int a, int b, int c){
-        return (a+b+c)==0;
-    }
-
-    private static boolean isUnique(List<List<Integer>> result, List<Integer> r){
-
-        Set<String> rs = new HashSet<>();
-        r.stream().forEach(e->rs.add(e.toString()));
-
-        for(List<Integer> n: result){
-            if ( !isSame(n, rs) ){
-                return false;
-            }
         }
-        return true;
-    }
+        System.out.println("["+Arrays.stream(nums).mapToObj(String::valueOf).collect(Collectors.joining(","))+"] = "+count);
 
-    private static boolean isSame(List<Integer> n, Set<String> rs){
-        System.out.println(rs);
-        for(Integer i: n){
-            System.out.println(i+":"+rs.contains(i.toString()));
-            if( !rs.contains(i.toString()) ){
-                return false;
-            }
-        }
-        return true;
+        List<List<Integer>> list = new ArrayList<>(map.size());
+        list.addAll(map.values());
+        return list;
     }
 
     @Test
     public void testThreeSum1(){
-        List<List<Integer>> threeSumResult = threeSum(new int[] {-1,0,1,2,-1,-4});
-        Assert.assertEquals(2, threeSumResult.size());
-
-        Assert.assertEquals(3, threeSumResult.get(0).size());
-        Assert.assertTrue(threeSumResult.get(0).contains(-1));
-        threeSumResult.get(0).remove(threeSumResult.get(0).indexOf(-1));
-        Assert.assertTrue(threeSumResult.get(0).contains(-1));
-        threeSumResult.get(0).remove(threeSumResult.get(0).indexOf(-1));
-        Assert.assertTrue(threeSumResult.get(0).contains(2));
-        threeSumResult.get(0).remove(threeSumResult.get(0).indexOf(2));
-        Assert.assertEquals(0, threeSumResult.get(0).size());
-
-
-        Assert.assertEquals(3, threeSumResult.get(1).size());
-        Assert.assertTrue(threeSumResult.get(1).contains(-1));
-        threeSumResult.get(1).remove(threeSumResult.get(1).indexOf(-1));
-        Assert.assertTrue(threeSumResult.get(1).contains(0));
-        threeSumResult.get(1).remove(threeSumResult.get(1).indexOf(0));
-        Assert.assertTrue(threeSumResult.get(1).contains(1));
-        threeSumResult.get(1).remove(threeSumResult.get(1).indexOf(1));
-        Assert.assertEquals(0, threeSumResult.get(1).size());
+        Assert.assertEquals("[[-1, 0, 1], [-1, -1, 2]]", threeSum(new int[] {-1,0,1,2,-1,0,-4,1}).toString()); // 9, 8, 3
     }
 
     @Test
     public void testThreeSum2(){
-        List<List<Integer>> threeSumResult = threeSum(new int[] {1, -2, 1, 0, 5});
-        Assert.assertEquals(1, threeSumResult.size());
-
-        Assert.assertEquals(3, threeSumResult.get(0).size());
-        Assert.assertTrue(threeSumResult.get(0).contains(1));
-        threeSumResult.get(0).remove(threeSumResult.get(0).indexOf(1));
-        Assert.assertTrue(threeSumResult.get(0).contains(-2));
-        threeSumResult.get(0).remove(threeSumResult.get(0).indexOf(-2));
-        Assert.assertTrue(threeSumResult.get(0).contains(1));
-        threeSumResult.get(0).remove(threeSumResult.get(0).indexOf(1));
-        Assert.assertEquals(0, threeSumResult.get(0).size());
+        Assert.assertEquals("[[-2, 1, 1]]", threeSum(new int[] {1, -2, -2, 1, 1, 0, 5}).toString()); // 6, 4, 1
     }
 
     @Test
-    public void testThreeSumEmpty(){
-        List<List<Integer>> threeSumResult = threeSum(new int[] {});
-        Assert.assertEquals(0, threeSumResult.size());
-    }
-
-    @Test
-    public void testThreeSumZero(){
-        List<List<Integer>> threeSumResult = threeSum(new int[] {0});
-        Assert.assertEquals(0, threeSumResult.size());
+    public void testThreeSum3(){
+        Assert.assertEquals("[]", threeSum(new int[] {}).toString()); // 0, 0, 0
     }
 }

@@ -1,9 +1,13 @@
 package eqb;
 
+import org.junit.Test;
+
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static org.junit.Assert.assertEquals;
 
 public class PrimeNumber {
 
@@ -11,58 +15,54 @@ public class PrimeNumber {
         Scanner in = new Scanner(System.in);
 
         System.out.print("Enter number:");
-        String number = in.next();
+        String str = in.next();
 
-        int max = Integer.parseInt(number.split("\\.")[0]);
+        String[]  arr = str.split("\\.");
 
+        int max = Integer.parseInt(arr[0]) + ((arr.length>1 && Integer.parseInt(arr[1])>0 )? 0: -1);
 
-        long start2 = System.currentTimeMillis();
-        String primes2 = getPrimeNumbersSqrt(max).stream().map(n-> n.toString()).collect(Collectors.joining(","));
-        long finish2 = System.currentTimeMillis();
+        System.out.println(new PrimeNumber().getPrimeNumbersN(max).toString());
 
-        long start = System.currentTimeMillis();
-        String primes = ""; //getPrimeNumbersN2(max).stream().map(n-> n.toString()).collect(Collectors.joining(","));
-        long finish = System.currentTimeMillis();
+    }
 
-        /*
-        Enter number:    999999  0.16 sec inline method sqrt
-                                  27 sec inline method N/2
-                                  54 sec inline block N/2
-                                 110 sec inline block N
-        Enter number:   9999999 3 sec
-        Enter number:  99999999 76 sec
-        Enter number: 999999999 Java heap space
-         */
+    List<Integer> getPrimeNumbersN(int max){
+        return IntStream.rangeClosed(2, max)
+                .filter(N -> isPrime(N, N/2))
+                .mapToObj(Integer::valueOf)
+                .collect(Collectors.toList());
+    }
 
-        System.out.printf("Prime Sqrt = %d mls\n", finish2-start2);
-        System.out.printf("Prime  N/2 = %d mls\n", finish - start);
+    List<Integer> getPrimeNumbersSqrt(int max){
+        return IntStream.rangeClosed(2, max)
+                .filter(N -> isPrime(N, (int) Math.floor(Math.sqrt((double) N))))
+                .mapToObj(Integer::valueOf)
+                .collect(Collectors.toList());
+    }
 
-        if( primes.equals(primes2) ){
-            System.out.println(primes);
+    boolean isPrime(int n, int max) {
+        if( n <= 2 ) {
+            return true;
+        } else if( (n & 1) == 0 ){
+            return false;
         }
-
-    }
-
-    static List<Integer> getPrimeNumbersN2(int max){
-        return IntStream.range(2, max).filter(N->PrimeNumber.isPrime(N, N/2)).mapToObj(Integer::valueOf).collect(Collectors.toList());
-    }
-
-    static List<Integer> getPrimeNumbersSqrt(int max){
-        return IntStream.range(2, max).filter(N->PrimeNumber.isPrime(N, (int) Math.floor(Math.sqrt((double) N)))).mapToObj(Integer::valueOf).collect(Collectors.toList());
-    }
-
-    static boolean isPrime(int n, int max) {
-        if( n > 2 ) {
-            if( (n & 1) == 0 ){
+        for (int i=3; i <= max; i+=2) {
+            if (n % i == 0) {
                 return false;
-            }
-            for (int i=3; i <= max; i+=2) {
-                if (n % i == 0) {
-                    return false;
-                }
             }
         }
         return true;
+    }
+
+    @Test
+    public void testPrimeNumber22() {
+        assertEquals("[2, 3, 5, 7, 11, 13, 17, 19]", getPrimeNumbersN(22).toString());
+        assertEquals("[2, 3, 5, 7, 11, 13, 17, 19]", getPrimeNumbersSqrt(22).toString());
+    }
+
+    @Test
+    public void testPrimeNumber100() {
+        assertEquals("[2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]", getPrimeNumbersN(100).toString());
+        assertEquals("[2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]", getPrimeNumbersSqrt(100).toString());
     }
 
 }
