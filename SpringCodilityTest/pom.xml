@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>spring.interview</groupId>
-	<artifactId>Spring</artifactId>
+	<artifactId>SpringCodilityTest</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Spring</name>
 
