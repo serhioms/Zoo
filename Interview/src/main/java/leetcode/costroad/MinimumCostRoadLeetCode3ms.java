@@ -11,29 +11,30 @@ public class MinimumCostRoadLeetCode3ms implements MinimumCostRoad {
         Road last = startPoint.next = targetPoint;
         for (int[] data : specialRoads) {
             Road road = new Road(data, startPoint);
-            if (road.isUseful())
+            if (road.isUseful()) // exclude roads which cost more then distance from the linked list
                 last = last.next = road;
         }
+        // LinkedList: startPoint, targetPoint, specialPoint1, 2, 3, ..., N where N.next == null
         Road defined = startPoint;
         do {
             int minDist = Integer.MAX_VALUE;
-            Road prev = startPoint;
+            Road prev = startPoint; // always start from the beginning of the linked list
             Road preMin = null;
             while (true) {
                 Road road = prev.next;
                 if (road == null)
                     break;
-                int dist = road.updateDistance(defined);
+                int dist = road.updateDistance(defined); // calculate distance from last minimal/defined point and save it into current point holded by prev point
                 if (dist < minDist) {
-                    minDist = dist;
-                    preMin = prev;
+                    minDist = dist; // memorize new minimal distance
+                    preMin = prev;  // memorize minimal road holder (previous in the linked list)
                 }
                 prev = road;
             }
-            defined = preMin.next;
-            preMin.next = defined.next;
-        } while (defined != targetPoint);
-        return targetPoint.distance;
+            defined = preMin.next;          // next minimal road added to the root so far
+            preMin.next = defined.next;     // exclude min road from the linked list
+        } while (defined != targetPoint);   // linked list get empty of roads
+        return targetPoint.distance;        // targetPoint is holder for the minimal road
     }
 
     private static class Road {
@@ -58,16 +59,25 @@ public class MinimumCostRoadLeetCode3ms implements MinimumCostRoad {
             x2 = data[2];
             y2 = data[3];
             cost = data[4];
-            distance = Math.abs(startPoint.x1 - x2) + Math.abs(startPoint.y1 - y2);
+            distance = distance(startPoint.x1, x2, startPoint.y1, y2);
         }
 
         boolean isUseful() {
-            return cost < distance && cost < Math.abs(x1 - x2) + Math.abs(y1 - y2);
+            return cost < distance && cost < distance(x1, x2, y1, y2);
+        }
+
+        int distance(int x1, int x2, int y1, int y2){
+            return Math.abs(x1 - x2) + Math.abs(y1 - y2);
         }
 
         int updateDistance(Road defined) {
-            return distance = Math.min(distance,
-                    defined.distance + Math.abs(defined.x2 - x1) + Math.abs(defined.y2 - y1) + cost);
+            int distanceBetweenRoads = distance(defined.x2, x1, defined.y2, y1);
+            int distanceToLastLag = defined.distance;
+            distance = Math.min(distance,
+                    distanceToLastLag +
+                    distanceBetweenRoads +
+                    cost);
+            return distance;
         }
     }
 

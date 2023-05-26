@@ -20,18 +20,23 @@ public class MinimumCostRoadTest extends TestAutomation {
 
     @BeforeClass
     public static void beforeClass() {
-        addImplementation(new MinimumCostRoadMy1270ms(), "My");         // 194 ms
-        addImplementation(new MinimumCostRoadLeetCode3ms(), "LeetCode");   // 5 ms
-        addImplementation(new MinimumCostRoadSample4ms(), "Sample4");    // 26 ms
-        addImplementation(new MinimumCostRoadSample5ms(), "Sample5");    // 13 ms
-        addImplementation(new MinimumCostRoadSample7ms(), "Sample7");    // 16 ms
-        addImplementation(new MinimumCostRoadSample8ms(), "Sample8");    // 26 ms
-        addImplementation(new MinimumCostRoadSample15ms(), "Sample15");   // 32 ms
+        addImplementation(new MinimumCostRoadMyOptimize(), "MyOptimize");   // 132 ms
+        addImplementation(new MinimumCostRoadMy1270ms(), "My");             // 134 ms
+        addImplementation(new MinimumCostRoadLeetCode3ms(), "LeetCode");    // 3 ms
+        addImplementation(new MinimumCostRoadSample4ms(), "Sample4");       // 19 ms
+        addImplementation(new MinimumCostRoadSample5ms(), "Sample5");       // 11 ms
+        addImplementation(new MinimumCostRoadSample7ms(), "Sample7");       // 12 ms
+        addImplementation(new MinimumCostRoadSample8ms(), "Sample8");       // 23 ms
+        addImplementation(new MinimumCostRoadSample15ms(), "Sample15");     // 31 ms
     }
 
     @Test
     public void testCostRoad01() {
-        runAllImplementations(test -> assertEquals(5, ((MinimumCostRoad)test).solution(new int[]{1, 1}, new int[]{4, 5}, new int[][]{new int[]{1, 2, 3, 3, 2}, new int[]{3, 4, 4, 5, 1}})));
+        runAllImplementations(test -> assertEquals(5,
+                ((MinimumCostRoad)test).solution(new int[]{1, 1}, new int[]{4, 5},
+                new int[][]{
+                        new int[]{1, 2, 3, 3, 2},
+                        new int[]{3, 4, 4, 5, 1}})));
     }
 
     @Test
