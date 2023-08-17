@@ -28,13 +28,8 @@ public class FindGivenSumFromAllSubsetsOfGivenSet {
                 result.add("["+stack.stream().map(i -> Integer.toString(nums[i])).collect(Collectors.joining(","))+"]");
             }
 
-            int last = stack.pop() + 1;
+            IntStream.range(stack.pop() + 1, max).forEach(stack::add); // populate indexes
 
-            if (stack.size() == 0) {
-                IntStream.range(last, max).forEach(stack::add); // populate indexes
-            } else if (last < max) {
-                stack.push(last);
-            }
         }
         return result;
     }

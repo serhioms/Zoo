@@ -63,7 +63,7 @@ public class MinimumCostRoadLeetCode3ms implements MinimumCostRoad {
         }
 
         boolean isUseful() {
-            return cost < distance && cost < distance(x1, x2, y1, y2);
+            return cost < distance; // && cost < distance(x1, x2, y1, y2); // already calculated in #62
         }
 
         int distance(int x1, int x2, int y1, int y2){
@@ -72,12 +72,11 @@ public class MinimumCostRoadLeetCode3ms implements MinimumCostRoad {
 
         int updateDistance(Road defined) {
             int distanceBetweenRoads = distance(defined.x2, x1, defined.y2, y1);
-            int distanceToLastLag = defined.distance;
-            distance = Math.min(distance,
-                    distanceToLastLag +
-                    distanceBetweenRoads +
-                    cost);
-            return distance;
+            int distanceSoFar = defined.distance;
+            int combinedDistance = distanceSoFar
+                    + distanceBetweenRoads
+                    + cost;
+            return distance = Math.min(distance, combinedDistance);
         }
     }
 
