@@ -21,11 +21,11 @@
 		    <artifactId>assertj-core</artifactId>
 		    <version>2.6.0</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.typesafe.akka/akka-actor_2.11 -->
+		<!-- https://mvnrepository.com/artifact/com.typesafe.akka/akka-actor -->
 		<dependency>
 			<groupId>com.typesafe.akka</groupId>
-			<artifactId>akka-actor</artifactId>
-			<version>2.0.2</version>
+			<artifactId>akka-actor_2.11</artifactId>
+			<version>2.3.9</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.lmax/disruptor -->
 		<dependency>
@@ -44,6 +44,11 @@
 			<groupId>commons-beanutils</groupId>
 			<artifactId>commons-beanutils</artifactId>
 			<version>1.9.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.3.2</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/log4j/log4j -->
 		<dependency>
@@ -67,7 +72,7 @@
 		<dependency>
 			<groupId>ca.rdmss</groupId>
 			<artifactId>multi-test</artifactId>
-			<version>1.3.0</version>
+			<version>1.4.0</version>
 		</dependency>
 
 	</dependencies>
