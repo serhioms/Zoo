@@ -12,6 +12,8 @@
     <modules>
         <module>Interview</module>
         <module>JavaGames</module>
-        <module>SpringCodilityTest</module>
+        <module>SpringCodilityHealthCheck</module>
+        <module>SpringCodilityTaskManagement</module>
+<!--        <module>SpringBootStarterDemoWar</module>-->
     </modules>
 </project>

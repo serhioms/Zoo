@@ -1,4 +1,4 @@
-package application;
+package health.check.application;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,11 +11,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebMvc
 @SpringBootApplication
 @ComponentScan(basePackages= {""}, excludeFilters = {@ComponentScan.Filter(type = FilterType.ANNOTATION, value=Configuration.class)})
-@ComponentScan({"codility"})
-public class TestWebApp implements WebMvcConfigurer {
+@ComponentScan({"health.check"})
+public class HelthCheckWebApp implements WebMvcConfigurer {
 
     public static void main(String[] args) {
-        SpringApplication.run(TestWebApp.class, args);
+        SpringApplication.run(HelthCheckWebApp.class, args);
     }
 
 }

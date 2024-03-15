@@ -1,0 +1,419 @@
+{
+	"info": {
+		"_postman_id": "1a64334d-4780-4840-b188-b54387739ddf",
+		"name": "ZooTest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "TaskManagement 404",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status is 400\", () => {",
+							"  pm.expect(pm.response.code).to.eql(404);",
+							"});",
+							"const responseJson = pm.response.json();",
+							"pm.test(\"Status code is 400\", () => {",
+							"  pm.expect(responseJson.status).to.eql(404);",
+							"});",
+							"pm.test(\"Message is bla bla bla\", () => {",
+							"  pm.expect(responseJson.message).to.eql(\"Cannot find task with given id\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"description\": \"test\",\n    \"priority\": \"1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/task/0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"task",
+						"0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TaskManagement 400",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status is 400\", () => {",
+							"  pm.expect(pm.response.code).to.eql(400);",
+							"});",
+							"const responseJson = pm.response.json();",
+							"pm.test(\"Status code is 400\", () => {",
+							"  pm.expect(responseJson.status).to.eql(400);",
+							"});",
+							"pm.test(\"Message is bla bla bla\", () => {",
+							"  pm.expect(responseJson.message).to.eql(\"Task description is required\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"description\": \"test\",\n    \"priority\": \"1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/task/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"task",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TaskManagement 200",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status is 200\", () => {",
+							"  pm.expect(pm.response.code).to.eql(200);",
+							"});",
+							"const responseJson = pm.response.json();",
+							"pm.test(\"Priority is 5\", () => {",
+							"  pm.expect(responseJson.priority).to.eql(5);",
+							"});",
+							"pm.test(\"Message is bla bla bla\", () => {",
+							"  pm.expect(responseJson.message).to.eql(\"task's description\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"description\": \"test\",\n    \"priority\": \"1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/task/5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"task",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "HealthCheck GET full",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status is 200\", () => {",
+							"  pm.expect(pm.response.code).to.eql(200);",
+							"});",
+							"const responseJson = pm.response.json();",
+							"pm.test(\"Status is OK\", () => {",
+							"  pm.expect(responseJson.status).to.eql(\"OK\");",
+							"});",
+							"pm.test(\"currentTime is presented\", () => {",
+							"  pm.expect(responseJson.currentTime).not.eq(undefined);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"description\": \"test\",\n    \"priority\": \"1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/healthcheck?format=full",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"healthcheck"
+					],
+					"query": [
+						{
+							"key": "format",
+							"value": "full"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "HealthCheck GET short",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status is 200\", () => {",
+							"  pm.expect(pm.response.code).to.eql(200);",
+							"});",
+							"const responseJson = pm.response.json();",
+							"pm.test(\"Status is OK\", () => {",
+							"  pm.expect(responseJson.status).to.eql(\"OK\");",
+							"});",
+							"pm.test(\"currentTime is presented\", () => {",
+							"  pm.expect(responseJson.currentTime).eq(undefined);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"description\": \"test\",\n    \"priority\": \"1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/healthcheck?format=short",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"healthcheck"
+					],
+					"query": [
+						{
+							"key": "format",
+							"value": "short"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "HealthCheck PUT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status is 405\", () => {",
+							"  pm.expect(pm.response.code).to.eql(405);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"description\": \"test\",\n    \"priority\": \"1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/healthcheck?format=short",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"healthcheck"
+					],
+					"query": [
+						{
+							"key": "format",
+							"value": "short"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "HealthCheck POST",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status is 405\", () => {",
+							"  pm.expect(pm.response.code).to.eql(405);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"description\": \"test\",\n    \"priority\": \"1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/healthcheck?format=short",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"healthcheck"
+					],
+					"query": [
+						{
+							"key": "format",
+							"value": "short"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "HealthCheck DELETE",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status is 405\", () => {",
+							"  pm.expect(pm.response.code).to.eql(405);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"description\": \"test\",\n    \"priority\": \"1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/healthcheck?format=short",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"healthcheck"
+					],
+					"query": [
+						{
+							"key": "format",
+							"value": "short"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

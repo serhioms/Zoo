@@ -1,4 +1,4 @@
-package codility;
+package health.check.codility;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -42,7 +42,7 @@ public class HelthcheckController {
 			return ResponseEntity.ok(rootNode.toString());
 		case "full":
 			rootNode.put("currentTime", curentDateTime);
-			rootNode.put("application", "OK");
+			rootNode.put("status", "OK");
 			return ResponseEntity.ok(rootNode.toString());
 		}
 		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ""); // 400 Bad Format
