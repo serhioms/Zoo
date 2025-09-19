@@ -3,7 +3,9 @@ package task.management.codility;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.extern.jackson.Jacksonized;
+import org.hibernate.annotations.Table;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.annotation.Id;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -41,11 +45,17 @@ public class TaskManagementController {
 		private Integer priority;
 	}
 
-	@Value
+	@Data
+	@AllArgsConstructor
 	@Builder
-	@Jacksonized
-	public static class Task {
+	@NoArgsConstructor
+	@Entity
+	@Table(appliesTo = "TASKS")
+	public class Task {
+		@Id
+		@GeneratedValue
 		private Long id;
+
 		private String description;
 		private Integer priority;
 	}
@@ -57,14 +67,17 @@ public class TaskManagementController {
 	}
 
 	@Service
-	class TaskRepository {
+	public class TaskRepository1 {
 		public Optional<Task> findById(Long id) {
 			return db.containsKey(id)? Optional.of(db.get(id)): Optional.empty();
 		}
 	}
 
 	@Autowired
-	TaskRepository taskRepository;
+	TaskRepository1 taskRepository1;
+
+	@Autowired
+	TaskRepository2 taskRepository2;
 
 	/*
 	http://localhost:8080/task?id=10
@@ -72,7 +85,7 @@ public class TaskManagementController {
 	@PutMapping(value = "/task/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<TaskResponse> updateTask(@PathVariable Long id, @RequestBody TaskRequest taskRequest) {
 
-		Optional<Task> task = taskRepository.findById(id);
+		Optional<Task> task = taskRepository2.findById(id);
 
 		if( task.isPresent() ){
 			if( task.get().description == null ){
