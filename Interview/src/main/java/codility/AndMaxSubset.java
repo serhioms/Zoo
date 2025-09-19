@@ -13,14 +13,15 @@ import static org.junit.Assert.assertEquals;
 public class AndMaxSubset {
 
     public int solutionFast(int[] A, boolean isTrace) {
-        AtomicInteger[] counter = new AtomicInteger[32];
-        for(int i=0; i<32; ++i){
+        int size = Integer.toBinaryString(Integer.MAX_VALUE).length();
+        AtomicInteger[] counter = new AtomicInteger[size];
+        for(int i=0; i<size; ++i){
             counter[i] = new AtomicInteger(0);
         }
         Arrays.stream(A)
                 .parallel()
                 .forEach( a -> {
-                    for(int i=0; a > 0; ++i ){
+                    for(int i=0; a > 0 && i < size; ++i ){
                         if( (a & 1) == 1 ){
                             counter[i].incrementAndGet();
                         }
@@ -28,7 +29,7 @@ public class AndMaxSubset {
                     }
                 });
         int max = 0;
-        for(int i=0; i<32; ++i){
+        for(int i=0; i<size; ++i){
             if( max < counter[i].get() ){
                 max = counter[i].get();
             }

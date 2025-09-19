@@ -14,6 +14,7 @@
         <module>JavaGames</module>
         <module>SpringCodilityHealthCheck</module>
         <module>SpringCodilityTaskManagement</module>
-<!--        <module>SpringBootStarterDemoWar</module>-->
+        <module>YandexCode</module>
+        <!--        <module>SpringBootStarterDemoWar</module>-->
     </modules>
 </project>
