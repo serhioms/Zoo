@@ -1,4 +1,4 @@
-package ru.yandex.code.singl;
+package ru.yandex.code.singleton;
 
 public class LazySingletonDCL {
     private static volatile LazySingletonDCL instance;

@@ -1,4 +1,4 @@
-package ru.yandex.code.singl;
+package ru.yandex.code.singleton;
 
 public enum EnumForceSinglton {
     INSTANCE;
