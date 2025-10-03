@@ -1,0 +1,267 @@
+{
+	"info": {
+		"_postman_id": "d8193c44-14c0-4e6d-a1c5-5032db982dba",
+		"name": "ERP Conn Svc",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34632253"
+	},
+	"item": [
+		{
+			"name": "Health",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/twodatasources/actuator/health",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"twodatasources",
+						"actuator",
+						"health"
+					],
+					"query": [
+						{
+							"key": "jobName",
+							"value": "reportA,reportB,reportC,reportD",
+							"disabled": true
+						},
+						{
+							"key": "logLevel",
+							"value": "Debug",
+							"disabled": true
+						},
+						{
+							"key": "jobName",
+							"value": "reportD",
+							"disabled": true
+						},
+						{
+							"key": "jobName",
+							"value": "reportC",
+							"disabled": true
+						},
+						{
+							"key": "jobName",
+							"value": "reportB",
+							"disabled": true
+						},
+						{
+							"key": "jobName",
+							"value": "reportA",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Mize recon repo start",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{local.host.8083}}/erpconnsvc/mize/recon/report/start?startDate=2024-04-01&endDate=2024-04-30",
+					"host": [
+						"{{local.host.8083}}"
+					],
+					"path": [
+						"erpconnsvc",
+						"mize",
+						"recon",
+						"report",
+						"start"
+					],
+					"query": [
+						{
+							"key": "startDate",
+							"value": "2024-04-01"
+						},
+						{
+							"key": "endDate",
+							"value": "2024-04-30"
+						},
+						{
+							"key": "reportName",
+							"value": "reportA",
+							"disabled": true
+						},
+						{
+							"key": "reportName",
+							"value": "reportB",
+							"disabled": true
+						},
+						{
+							"key": "reportName",
+							"value": "reportC",
+							"disabled": true
+						},
+						{
+							"key": "reportName",
+							"value": "reportD",
+							"disabled": true
+						},
+						{
+							"key": "reportDelimeter",
+							"value": "Tab",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Mize recon repor status",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{local.host.8083}}/erpconnsvc/mize/recon/report/status",
+					"host": [
+						"{{local.host.8083}}"
+					],
+					"path": [
+						"erpconnsvc",
+						"mize",
+						"recon",
+						"report",
+						"status"
+					],
+					"query": [
+						{
+							"key": "jobName",
+							"value": "reportA,reportB,reportC,reportD",
+							"disabled": true
+						},
+						{
+							"key": "logLevel",
+							"value": "Debug",
+							"disabled": true
+						},
+						{
+							"key": "jobName",
+							"value": "reportD",
+							"disabled": true
+						},
+						{
+							"key": "jobName",
+							"value": "reportC",
+							"disabled": true
+						},
+						{
+							"key": "jobName",
+							"value": "reportB",
+							"disabled": true
+						},
+						{
+							"key": "jobName",
+							"value": "reportA",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "App Info",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local.host.8083}}/erpconnsvc/app/info",
+					"host": [
+						"{{local.host.8083}}"
+					],
+					"path": [
+						"erpconnsvc",
+						"app",
+						"info"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Recon AR Details",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{[{\"partnerId\": \"1234\"}]}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local.host.8083}}/erpconnsvc/recon/details/getARDetail",
+					"host": [
+						"{{local.host.8083}}"
+					],
+					"path": [
+						"erpconnsvc",
+						"recon",
+						"details",
+						"getARDetail"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

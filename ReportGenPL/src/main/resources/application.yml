@@ -1,0 +1,16 @@
+message: I am from main resources/config/main.yml!
+spring:
+  datasource-acct:
+    jdbc-url: jdbc:oracle:thin:@//ash1-fndb-q01.dqs.pcln.com:1682/acct.world
+    username: ERP_INFA_DQ_RW
+    password: temppass2009
+    driver-class-name: oracle.jdbc.OracleDriver
+    maxActive: 1
+    maximum-pool-size: 1
+  datasource-cms:
+    jdbc-url: jdbc:oracle:thin:@//nw-dbl-q01.dqs.pcln.com:1602/cmsqa.world
+    username: ERP_INFA_DQ_RW
+    password: temppass2009
+    driver-class-name: oracle.jdbc.OracleDriver
+    maxActive: 3
+    maximum-pool-size: 3

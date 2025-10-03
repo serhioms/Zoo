@@ -1,0 +1,195 @@
+{
+	"info": {
+		"_postman_id": "1f080b88-dd7b-415a-872c-1311ab5a7df2",
+		"name": "Two DataSource Demo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34632253"
+	},
+	"item": [
+		{
+			"name": "Health",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/twodatasources/actuator/health",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"twodatasources",
+						"actuator",
+						"health"
+					],
+					"query": [
+						{
+							"key": "jobName",
+							"value": "reportA,reportB,reportC,reportD",
+							"disabled": true
+						},
+						{
+							"key": "logLevel",
+							"value": "Debug",
+							"disabled": true
+						},
+						{
+							"key": "jobName",
+							"value": "reportD",
+							"disabled": true
+						},
+						{
+							"key": "jobName",
+							"value": "reportC",
+							"disabled": true
+						},
+						{
+							"key": "jobName",
+							"value": "reportB",
+							"disabled": true
+						},
+						{
+							"key": "jobName",
+							"value": "reportA",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Report start",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/twodatasources/demo/report/start",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"twodatasources",
+						"demo",
+						"report",
+						"start"
+					],
+					"query": [
+						{
+							"key": "reportDelimeter",
+							"value": "Tab",
+							"disabled": true
+						},
+						{
+							"key": "reportName",
+							"value": "reportB",
+							"disabled": true
+						},
+						{
+							"key": "reportName",
+							"value": "reportC",
+							"disabled": true
+						},
+						{
+							"key": "reportName",
+							"value": "reportD",
+							"disabled": true
+						},
+						{
+							"key": "reportName",
+							"value": "reportA",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Report status",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/twodatasources/demo/report/status",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"twodatasources",
+						"demo",
+						"report",
+						"status"
+					],
+					"query": [
+						{
+							"key": "jobName",
+							"value": "reportA,reportB,reportC,reportD",
+							"disabled": true
+						},
+						{
+							"key": "logLevel",
+							"value": "Debug",
+							"disabled": true
+						},
+						{
+							"key": "jobName",
+							"value": "reportD",
+							"disabled": true
+						},
+						{
+							"key": "jobName",
+							"value": "reportC",
+							"disabled": true
+						},
+						{
+							"key": "jobName",
+							"value": "reportB",
+							"disabled": true
+						},
+						{
+							"key": "jobName",
+							"value": "reportA",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
